@@ -693,7 +693,7 @@ function createSound() {
     let ctx = null;
     let enabled = false;
     let bgAudio = null;
-    let pluckAudio = null;
+    let pluckAudio = new Audio('pluck.mp3');
 
     const ensure = () => { 
         if (!ctx && Ctx) ctx = new Ctx(); 
@@ -701,7 +701,6 @@ function createSound() {
         if (!bgAudio) {
             bgAudio = new Audio('bg-audio.mp3');
             bgAudio.loop = true;
-            pluckAudio = new Audio('pluck.mp3');
         }
         return ctx; 
     };
@@ -720,7 +719,7 @@ function createSound() {
         },
         // A plucked jute string
         pluck(amount) {
-            if (!enabled || !pluckAudio || amount < 0.05) return;
+            if (!pluckAudio || amount < 0.05) return;
             const clone = pluckAudio.cloneNode();
             clone.volume = Math.min(1, amount * 1.2);
             clone.play().catch(() => {});
