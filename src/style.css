@@ -416,7 +416,7 @@ h3 { font-size: clamp(1.5rem, 2.2vw, 2.1rem); line-height: 1.1; }
 .film__pin { position: relative; height: 100svh; overflow: hidden; }
 .film__frame { position: absolute; inset: 0; }
 .motion .film__frame { clip-path: inset(14% 22% 14% 22% round 6px); }
-.film__video { width: 100%; height: 100%; object-fit: cover; }
+.film__frame video { width: 100%; height: 100%; object-fit: cover; }
 .film__overlay {
     position: absolute; inset: auto var(--gutter) 10vh; z-index: 2;
     pointer-events: none;
@@ -430,6 +430,54 @@ h3 { font-size: clamp(1.5rem, 2.2vw, 2.1rem); line-height: 1.1; }
     background: rgba(18, 13, 9, 0.55); color: var(--paper);
     border: 1px solid rgba(237, 228, 211, 0.35); border-radius: 999px;
     padding: 0.55rem 1rem; cursor: pointer; backdrop-filter: blur(6px);
+}
+
+@media (max-width: 860px) {
+    .film {
+        padding: 4rem var(--gutter);
+        min-height: auto;
+    }
+    .film__pin {
+        height: auto !important;
+        min-height: auto !important;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        overflow: visible !important;
+    }
+    .film__frame, .motion .film__frame {
+        position: relative !important;
+        inset: auto !important;
+        width: 100% !important;
+        aspect-ratio: 16 / 9 !important;
+        clip-path: none !important;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+    }
+    .film__frame video {
+        width: 100% !important;
+        height: 100% !important;
+        aspect-ratio: 16 / 9 !important;
+        object-fit: cover !important;
+    }
+    .film__overlay {
+        position: relative !important;
+        inset: auto !important;
+        padding: 0 !important;
+        margin-top: 0.5rem;
+    }
+    .film__overlay h2 {
+        font-size: clamp(2.2rem, 8vw, 3.2rem);
+    }
+    .film__toggle {
+        position: absolute;
+        right: 0.8rem;
+        bottom: 0.8rem;
+        z-index: 10;
+        font-size: 0.72rem;
+        padding: 0.4rem 0.8rem;
+    }
 }
 
 /* ─── III · The Hands ─── */
@@ -471,8 +519,33 @@ h3 { font-size: clamp(1.5rem, 2.2vw, 2.1rem); line-height: 1.1; }
 @media (max-width: 860px) {
     .hands__intro { grid-template-columns: 1fr; }
     .hands__split { grid-template-columns: 1fr; }
-    .deck__cards, .motion .deck__cards { display: grid; grid-template-columns: 1fr; height: auto; }
-    .motion .card { position: relative; left: auto; top: auto; width: auto; }
+    .deck { margin-top: 4rem; width: 100%; }
+    .deck__cards, .motion .deck__cards {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 2rem !important;
+        height: auto !important;
+        position: static !important;
+        width: 100% !important;
+    }
+    .card, .motion .card {
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        transform: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 1rem 1rem 1.4rem;
+        box-shadow: 0 12px 30px rgba(34, 24, 15, 0.12);
+        box-sizing: border-box;
+    }
+    .card img {
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 4 / 3 !important;
+        object-fit: cover !important;
+    }
 }
 
 /* ─── IV · The Return ─── */

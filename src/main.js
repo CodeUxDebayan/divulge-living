@@ -314,13 +314,23 @@ function film() {
     const frame = $('#filmFrame');
     const video = $('#filmVideo');
 
-    // Explicit four-value insets on both ends, so the frame can only ever grow from the centre
-    gsap.set(frame, { clipPath: 'inset(16% 24% 16% 24% round 6px 6px 6px 6px)' });
-    gsap.timeline({
-        scrollTrigger: { trigger: '#film', start: 'top top', end: '+=110%', pin: '.film__pin', scrub: 1 },
-    })
-        .to(frame, { clipPath: 'inset(0% 0% 0% 0% round 0px 0px 0px 0px)', ease: 'power2.inOut' }, 0)
-        .from('.film__overlay .mono, .film__overlay h2 > *', { yPercent: 40, opacity: 0, stagger: 0.12, ease: 'power3.out' }, 0.3);
+    const mm = gsap.matchMedia();
+    mm.add('(min-width: 861px)', () => {
+        gsap.set(frame, { clipPath: 'inset(16% 24% 16% 24% round 6px 6px 6px 6px)' });
+        gsap.timeline({
+            scrollTrigger: { trigger: '#film', start: 'top top', end: '+=110%', pin: '.film__pin', scrub: 1 },
+        })
+            .to(frame, { clipPath: 'inset(0% 0% 0% 0% round 0px 0px 0px 0px)', ease: 'power2.inOut' }, 0)
+            .from('.film__overlay .mono, .film__overlay h2 > *', { yPercent: 40, opacity: 0, stagger: 0.12, ease: 'power3.out' }, 0.3);
+    });
+
+    mm.add('(max-width: 860px)', () => {
+        gsap.set(frame, { clearProps: 'clipPath' });
+        gsap.from('.film__overlay', {
+            y: 30, opacity: 0, duration: 1, ease: 'expo.out',
+            scrollTrigger: { trigger: '#film', start: 'top 75%' },
+        });
+    });
 
     ScrollTrigger.create({
         trigger: '#film', start: 'top 80%', end: 'bottom top',
@@ -366,7 +376,12 @@ function hands() {
             .to({}, { duration: 0.3 });
     });
     mm.add('(max-width: 860px)', () => {
-        gsap.from('.card', { y: 60, opacity: 0, stagger: 0.15, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: '#deck', start: 'top 80%' } });
+        const cards = $$('.card');
+        gsap.set(cards, { clearProps: 'all' });
+        gsap.from(cards, {
+            y: 40, opacity: 0, stagger: 0.15, duration: 0.9, ease: 'expo.out',
+            scrollTrigger: { trigger: '#deck', start: 'top 85%' },
+        });
     });
 }
 
