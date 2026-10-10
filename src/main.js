@@ -691,47 +691,29 @@ function initFilmToggle() {
 function createSound() {
     const Ctx = window.AudioContext || window.webkitAudioContext;
     let ctx = null;
-    let timer = null;
     let enabled = false;
+    let bgAudio = null;
 
-    const ensure = () => { ctx = ctx || new Ctx(); ctx.resume(); return ctx; };
-
-    const click = (t, pitch) => {
-        const o = ctx.createOscillator(), g = ctx.createGain(), f = ctx.createBiquadFilter();
-        o.type = 'triangle';
-        o.frequency.setValueAtTime(pitch, t);
-        o.frequency.exponentialRampToValueAtTime(80, t + 0.08);
-        f.type = 'bandpass'; f.frequency.value = 600; f.Q.value = 3;
-        g.gain.setValueAtTime(0.08, t);
-        g.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
-        o.connect(f).connect(g).connect(ctx.destination);
-        o.start(t); o.stop(t + 0.1);
-    };
-    const thud = (t) => {
-        const o = ctx.createOscillator(), g = ctx.createGain();
-        o.type = 'sine';
-        o.frequency.setValueAtTime(90, t);
-        o.frequency.exponentialRampToValueAtTime(35, t + 0.18);
-        g.gain.setValueAtTime(0.1, t);
-        g.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
-        o.connect(g).connect(ctx.destination);
-        o.start(t); o.stop(t + 0.22);
+    const ensure = () => { 
+        if (!ctx && Ctx) ctx = new Ctx(); 
+        if (ctx) ctx.resume(); 
+        if (!bgAudio) {
+            bgAudio = new Audio('bg-audio.mp3');
+            bgAudio.loop = true;
+        }
+        return ctx; 
     };
 
     return {
-        available: Boolean(Ctx),
+        available: true,
         setEnabled(on) {
             enabled = on;
             if (on) {
                 ensure();
-                let beat = 0;
-                timer = setInterval(() => {
-                    const now = ctx.currentTime;
-                    click(now, beat++ % 2 ? 210 : 260);
-                    thud(now + 0.12);
-                }, 650);
+                bgAudio.play().catch(e => console.warn('Audio play blocked:', e));
             } else {
-                clearInterval(timer);
+                if (bgAudio) bgAudio.pause();
+                if (ctx) ctx.suspend();
             }
         },
         // A plucked jute string: a warm partial pair with a quick decay, louder the further it was pulled
