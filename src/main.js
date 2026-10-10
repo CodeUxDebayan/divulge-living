@@ -154,7 +154,7 @@ function prologue() {
     })
         .to(['.hero__title', '.hero__meta'], { yPercent: -35, opacity: 0, ease: 'power2.in', duration: 0.45 }, 0)
         .to('.hero__watermark', { opacity: 0, yPercent: -20, duration: 0.35, ease: 'power1.in' }, 0)
-        .to(media, { clipPath: geo.full, ease: 'power2.inOut', duration: 0.8 }, 0.08)
+        .fromTo(media, { clipPath: geo.arch }, { clipPath: geo.full, ease: 'power2.inOut', duration: 0.8 }, 0.08)
         .to(img, { scale: 1, ease: 'none', duration: 1 }, 0)
         .to('.hero__cue, .hero__hint, .hero__strand', { opacity: 0, duration: 0.2 }, 0)
         .to('.hero__shade', { opacity: 1, duration: 0.5 }, 0.3)
@@ -316,11 +316,14 @@ function film() {
 
     const mm = gsap.matchMedia();
     mm.add('(min-width: 861px)', () => {
-        gsap.set(frame, { clipPath: 'inset(16% 24% 16% 24% round 6px 6px 6px 6px)' });
+        const c = { t: 16, r: 24, b: 16, l: 24, rad: 6 };
+        gsap.set(frame, { clipPath: `inset(${c.t}% ${c.r}% ${c.b}% ${c.l}% round ${c.rad}px)` });
         gsap.timeline({
             scrollTrigger: { trigger: '#film', start: 'top top', end: '+=110%', pin: '.film__pin', scrub: 1 },
         })
-            .to(frame, { clipPath: 'inset(0% 0% 0% 0% round 0px 0px 0px 0px)', ease: 'power2.inOut' }, 0)
+            .to(c, { t: 0, r: 0, b: 0, l: 0, rad: 0, ease: 'power2.inOut', onUpdate: () => {
+                frame.style.clipPath = `inset(${c.t}% ${c.r}% ${c.b}% ${c.l}% round ${c.rad}px)`;
+            } }, 0)
             .from('.film__overlay .mono, .film__overlay h2 > *', { yPercent: 40, opacity: 0, stagger: 0.12, ease: 'power3.out' }, 0.3);
     });
 
