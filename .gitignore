@@ -1,0 +1,65 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Production build artifacts
+dist/
+dist-ssr/
+
+# Heavy raw media and source assets (raw footage & uncompressed photos)
+website story/
+assets/videos/
+assets/images/
+assets/moodboard/
+*.mov
+*.MOV
+*.mp4
+*.m4v
+*.avi
+*.mkv
+
+# Explicitly track web-optimized media
+!assets/web/
+!assets/web/**
+
+# Local environment & secrets
+.env
+.env.*
+!.env.example
+
+# Temporary, cache, and backup files
+.backup/
+__pycache__/
+*.py[cod]
+*$py.class
+.cache/
+.temp/
+*.tmp
+*.bak
+*.swp
+*~
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*

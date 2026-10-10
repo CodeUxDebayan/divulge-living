@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divulge Living — The Golden Strand of Bengal</title>
+    <meta name="description" content="A living archive of Bengal's jute: sown in silt, retted in village ponds, braided by sixty-five women in Howrah, and returned to the soil when its work is done.">
+    <meta name="theme-color" content="#EDE4D3">
+    <link rel="icon" href="/favicon.png" type="image/png">
+    <meta property="og:title" content="Divulge Living — The Golden Strand of Bengal">
+    <meta property="og:description" content="Sown in silt. Braided by hand. Returned to the soil.">
+    <meta property="og:image" content="assets/web/plate-circular-weave.jpg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter+Tight:wght@400;500;600&family=Noto+Serif+Bengali:wght@300;400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/src/style.css">
+
+    <script>
+        if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+        // Decide before first paint, so the intro covers the page instead of flashing in late
+        document.documentElement.classList.add('js');
+        // Review mode: motion always on (see RESPECT_REDUCED_MOTION in src/main.js)
+        var RESPECT_REDUCED_MOTION = false;
+        if (!RESPECT_REDUCED_MOTION || !matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('motion');
+    </script>
+</head>
+<body>
+
+    <a class="skip-link" href="#strand">Skip to the story</a>
+
+    <!-- ═══════════ INTRO — the opening titles of the reel ═══════════ -->
+    <div class="intro" id="intro" aria-hidden="true">
+        <div class="intro__half intro__half--top"></div>
+        <div class="intro__half intro__half--bottom"></div>
+        <div class="intro__stage">
+            <p class="intro__slate mono"><span>Divulge Living</span><span>Reel Nº 01 · Five chapters</span><span id="introTc">00:00:00:00</span></p>
+            <svg class="intro__thread" viewBox="0 0 1200 100" preserveAspectRatio="none"><path id="introThread" d="M0 52 C 120 20, 240 84, 360 50 S 600 18, 720 52 S 960 86, 1080 48 S 1170 40, 1200 50"/></svg>
+            <p class="intro__bn" lang="bn">পাট</p>
+            <p class="intro__word">divulge<span class="intro__living">living</span></p>
+            <p class="intro__sub mono">The golden strand of Bengal — a film told by scroll</p>
+            <p class="intro__count mono"><span id="introCount">000</span> / 100</p>
+            <p class="intro__skip mono">Click to skip</p>
+        </div>
+    </div>
+
+    <!-- Viewfinder: crop marks + running timecode, as if the page were a reel -->
+    <div class="viewfinder" aria-hidden="true">
+        <i class="vf vf--tl"></i><i class="vf vf--tr"></i><i class="vf vf--bl"></i><i class="vf vf--br"></i>
+        <p class="timecode mono"><span class="timecode__dot"></span><span id="timecode">00:00:00:00</span></p>
+        <p class="framecount mono"><span id="frameScene">Sc. 00</span> · 25 fps</p>
+    </div>
+
+    <!-- Paper grain -->
+    <div class="grain" aria-hidden="true"></div>
+
+    <!-- Scroll progress: a three-ply braid that lengthens as the story unspools -->
+    <div class="braid-progress" aria-hidden="true"><div class="braid-progress__rope" id="braidRope"></div></div>
+
+    <!-- ═══════════ NAVIGATION ═══════════ -->
+    <header class="nav" id="nav">
+        <a href="#top" class="nav__mark" aria-label="Divulge Living — back to the beginning">divulge<span>living</span></a>
+
+        <p class="nav__chapter" aria-live="polite">
+            <span class="nav__num" id="navNum">00</span>
+            <span class="nav__rule" aria-hidden="true"></span>
+            <span class="nav__name" id="navName">Prologue</span>
+        </p>
+
+        <div class="nav__actions">
+            <button type="button" class="nav__btn" id="soundToggle" aria-pressed="false">
+                <span class="sound-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="nav__btn-text">Sound</span>
+            </button>
+            <button type="button" class="nav__btn nav__btn--index" id="indexToggle" aria-expanded="false" aria-controls="indexPanel">
+                <span class="nav__btn-text">Index</span>
+                <span class="nav__plus" aria-hidden="true"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Full-screen chapter index -->
+    <nav class="index-panel" id="indexPanel" aria-label="Chapter index" hidden>
+        <ol class="index-panel__list">
+            <li><a href="#strand"><span>I</span>The Strand<small>From silt to fibre in one season</small></a></li>
+            <li><a href="#nest"><span>II</span>The Nest<small>What the weaver bird taught us</small></a></li>
+            <li><a href="#film"><span>—</span>Interlude<small>The rhythm of the braid</small></a></li>
+            <li><a href="#hands"><span>III</span>The Hands<small>Sixty-five women of Howrah</small></a></li>
+            <li><a href="#return"><span>IV</span>The Return<small>Forty-five days back to soil</small></a></li>
+            <li><a href="#exchange"><span>V</span>The Exchange<small>Exhibitions, research &amp; enquiries</small></a></li>
+        </ol>
+        <p class="index-panel__foot">Amraberia, Howrah · West Bengal · <a href="mailto:divulgejute.official@gmail.com">divulgejute.official@gmail.com</a></p>
+    </nav>
+
+
+    <main id="top">
+
+    <!-- ═══════════ PROLOGUE ═══════════ -->
+    <section class="hero" id="prologue" data-bg="#EDE4D3" data-chapter="00" data-name="Prologue" data-theme="light">
+        <div class="hero__pin">
+            <div class="hero__meta mono">
+                <span>Nº 01 — A living archive</span>
+                <span><i>Corchorus olitorius</i> L.</span>
+                <span>Howrah, West Bengal</span>
+            </div>
+
+            <h1 class="hero__title" id="heroTitle">
+                <span class="hero__line">The world will</span>
+                <span class="hero__line">again know the</span>
+                <span class="hero__line"><em>golden strand.</em></span>
+            </h1>
+
+            <figure class="hero__media" id="heroMedia">
+                <img src="assets/web/hero-circular-weave.jpg" alt="Two artisans on a workshop floor stitching coils of braided jute into large sun-wheel mats" width="2200" height="1650" fetchpriority="high">
+                <div class="hero__shade" aria-hidden="true"></div>
+            </figure>
+
+            <div class="hero__reveal" id="heroReveal">
+                <span class="hero__bn" lang="bn">পাট</span>
+                <p>Pāṭ — jute. Sown in the silt of the Ganges delta, braided by sixty-five women in Howrah, and returned to the soil when its work is done.</p>
+            </div>
+
+            <svg class="hero__strand" id="heroStrand" aria-hidden="true"><path/></svg>
+            <p class="hero__hint mono" aria-hidden="true">Pluck the strand</p>
+
+            <p class="hero__cue mono" aria-hidden="true"><span class="hero__cue-line"></span>Scroll — the strand unspools</p>
+        </div>
+    </section>
+
+
+    <!-- ═══════════ I · THE STRAND (horizontal life of a fibre) ═══════════ -->
+    <section class="strand" id="strand" data-bg="#EDE4D3" data-chapter="I" data-name="The Strand" data-theme="light" aria-labelledby="strandTitle">
+        <div class="strand__pin">
+            <header class="strand__head">
+                <p class="mono">Chapter I · One season of jute, from silt to strand</p>
+                <h2 id="strandTitle" data-reveal>The Strand</h2>
+            </header>
+
+            <div class="strand__track" id="strandTrack" data-cursor="Scroll">
+                <!-- continuous thread drawn across every panel -->
+                <svg class="strand__thread" viewBox="0 0 3000 120" preserveAspectRatio="none" aria-hidden="true">
+                    <path id="strandThread" d="M0 70 C 180 20, 320 110, 500 64 S 820 18, 1000 70 S 1320 116, 1500 60 S 1820 14, 2000 66 S 2320 112, 2500 58 S 2820 30, 3000 64" />
+                </svg>
+
+                <article class="panel panel--intro" data-day="0">
+                    <p class="panel__num">01</p>
+                    <h3>Sown in silt</h3>
+                    <p>As the pre-monsoon rains arrive, jute is sown across the alluvial floodplains of the Ganges–Brahmaputra delta. In Bengal it is simply <em>pāṭ</em>.</p>
+                    <svg class="panel__leaf" viewBox="-40 -140 80 150" aria-hidden="true">
+                        <path d="M0,0 L5.6,-5.8 L9.9,-11.6 L16.8,-17.5 L16.8,-23.3 L22.7,-29.1 L21.7,-34.9 L26.6,-40.7 L24.7,-46.5 L28.6,-52.4 L25.7,-58.2 L28.7,-64 L24.9,-69.8 L27,-75.6 L22.4,-81.5 L23.8,-87.3 L18.5,-93.1 L19.3,-98.9 L13.4,-104.7 L13.7,-110.5 L7.4,-116.4 L4.1,-122.2 L0,-128 L-4.1,-123.7 L-7.4,-116.4 L-13.7,-112 L-13.4,-104.7 L-19.3,-100.4 L-18.5,-93.1 L-23.8,-88.8 L-22.4,-81.5 L-27,-77.1 L-24.9,-69.8 L-28.7,-65.5 L-25.7,-58.2 L-28.6,-53.9 L-24.7,-46.5 L-26.6,-42.2 L-21.7,-34.9 L-22.7,-30.6 L-16.8,-23.3 L-16.8,-19 L-9.9,-11.6 L-5.6,-7.3 Z M0,4 L0,-126 M0,-19 Q8,-25 16,-32 M0,-19 Q-8,-25 -16,-32 M0,-36 Q10,-42 21,-49 M0,-36 Q-10,-42 -21,-49 M0,-52 Q11,-58 22,-65 M0,-52 Q-11,-58 -22,-65 M0,-69 Q10,-75 20,-82 M0,-69 Q-10,-75 -20,-82 M0,-86 Q8,-92 15,-99 M0,-86 Q-8,-92 -15,-99"/>
+                    </svg>
+                </article>
+
+                <article class="panel panel--stats" data-day="120">
+                    <p class="panel__num">02</p>
+                    <h3>A hundred and twenty days</h3>
+                    <dl class="panel__stats">
+                        <div><dt>CO₂ drawn down, per hectare</dt><dd data-count="15">15<small>t</small></dd></div>
+                        <div><dt>Oxygen released</dt><dd data-count="11">11<small>t</small></dd></div>
+                    </dl>
+                    <p class="panel__note">Figures as widely cited for one growing season; its fallen leaves return to the field as green manure.</p>
+                </article>
+
+                <article class="panel panel--photo" data-day="135">
+                    <figure class="panel__figure">
+                        <img src="assets/web/field-causeway.jpg" alt="A bamboo causeway crossing a pond thick with water hyacinth in rural Howrah" loading="lazy" width="1500" height="998">
+                        <figcaption class="mono">Amraberia, Howrah · Sept 2022</figcaption>
+                    </figure>
+                    <div class="panel__text">
+                        <p class="panel__num">03</p>
+                        <h3>Retting</h3>
+                        <p>Cut stalks are sunk in still village ponds for two to three weeks. Native microbes loosen the bark. No solvent, no furnace — only water, time and patience.</p>
+                    </div>
+                </article>
+
+                <article class="panel panel--glyph" data-day="150">
+                    <span class="panel__bn" lang="bn" aria-hidden="true">পাট</span>
+                    <div class="panel__text">
+                        <p class="panel__num">04</p>
+                        <h3>The golden strand</h3>
+                        <p>Stripped by hand, washed and sun-dried, the fibre takes on its lustre: cellulose and lignin, grown rather than refined.</p>
+                    </div>
+                </article>
+
+                <article class="panel panel--photo" data-day="160">
+                    <figure class="panel__figure panel__figure--tall">
+                        <img src="assets/web/plate-braiding-circle.jpg" alt="Women of the collective seated close together, braiding jute rope and talking" loading="lazy" width="1100" height="732">
+                        <figcaption class="mono">The braiding circle · Howrah</figcaption>
+                    </figure>
+                    <div class="panel__text">
+                        <p class="panel__num">05</p>
+                        <h3>Braided by hand</h3>
+                        <p>Three plies, two hands, one unbroken rope — the base strand of every mat, basket and bag.</p>
+                    </div>
+                </article>
+
+                <article class="panel panel--photo panel--end" data-day="180">
+                    <figure class="panel__figure panel__figure--tall">
+                        <img src="assets/web/artifact-round-bag.jpg" alt="A round crocheted jute bag with a terracotta tassel, laid on hessian" loading="lazy" width="798" height="1024">
+                    </figure>
+                    <div class="panel__text">
+                        <p class="panel__num">06</p>
+                        <h3>And nothing wasted</h3>
+                        <p>Every offcut is twisted back into twine, trims and tassels. The strand never leaves the loop.</p>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Stage rail: where in the season we are -->
+            <div class="strand__rail" aria-hidden="true">
+                <div class="strand__rail-line"><span id="railFill"></span></div>
+                <ol>
+                    <li class="is-active">Sown</li><li>Grown</li><li>Retted</li><li>Stripped</li><li>Braided</li><li>Made</li>
+                </ol>
+                <p class="strand__day mono">Season <b id="strandDay">Day 0</b></p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ═══════════ II · THE NEST ═══════════ -->
+    <section class="nest" id="nest" data-bg="#1D1510" data-chapter="II" data-name="The Nest" data-theme="dark" aria-labelledby="nestTitle">
+        <div class="nest__pin">
+            <div class="nest__drawing">
+                <svg class="nest__svg" id="nestSvg" viewBox="0 0 420 540" fill="none" role="img" aria-labelledby="nestSvgTitle">
+                    <title id="nestSvgTitle">A Baya weaver's teardrop nest, drawn strand by strand, hanging from a palm frond</title>
+                    <path class="d" d="M10 40 Q150 70 210 65 Q310 60 410 35"/>
+                    <path class="d d--thin" d="M50 48 Q100 80 140 120 M80 54 Q110 96 128 150 M280 62 Q330 90 380 110 M330 54 Q352 90 360 140"/>
+                    <path class="d" d="M210 65 Q205 130 195 200 Q190 260 210 320"/>
+                    <path class="d" d="M214 65 Q220 140 225 210 Q230 270 210 320"/>
+                    <path class="d" d="M210 210 C 130 210, 118 300, 122 340 C 128 410, 170 450, 210 450 C 250 450, 292 410, 298 340 C 302 300, 290 210, 210 210 Z"/>
+                    <g class="d-weave">
+                        <path class="d d--thin" d="M135 270 Q210 250 285 270"/><path class="d d--thin" d="M125 300 Q210 280 295 300"/>
+                        <path class="d d--thin" d="M120 330 Q210 310 300 330"/><path class="d d--thin" d="M125 360 Q210 340 295 360"/>
+                        <path class="d d--thin" d="M135 390 Q210 370 285 390"/><path class="d d--thin" d="M150 420 Q210 405 270 420"/>
+                        <path class="d d--thin" d="M150 260 Q130 330 160 410"/><path class="d d--thin" d="M175 250 Q165 330 185 430"/>
+                        <path class="d d--thin" d="M210 245 Q210 330 210 440"/><path class="d d--thin" d="M245 250 Q255 330 235 430"/>
+                        <path class="d d--thin" d="M270 260 Q290 330 260 410"/>
+                    </g>
+                    <path class="d" d="M185 440 Q180 480 185 510 L235 510 Q240 480 235 440"/>
+                    <ellipse class="d" cx="210" cy="510" rx="25" ry="9"/>
+                </svg>
+                <p class="nest__caption mono"><i>Ploceus philippinus</i> — several hundred strands, each knotted by beak. No glue. No waste.</p>
+            </div>
+
+            <div class="nest__text">
+                <p class="mono">Chapter II</p>
+                <h2 id="nestTitle" data-reveal>The Nest</h2>
+
+                <blockquote class="poem">
+                    <p class="poem__bn" lang="bn">
+                        <span>বাবুই পাখিরে ডাকি, বলিছে চড়াই,</span>
+                        <span>“কুঁড়ে ঘরে থেকে কর শিল্পের বড়াই,</span>
+                        <span>আমি থাকি মহাসুখে অট্টালিকা ’পরে,</span>
+                        <span>তুমি কত কষ্ট পাও রোদ, বৃষ্টি, ঝড়ে।”</span>
+                        <span>বাবুই হাসিয়া কহে, “সন্দেহ কি তায়?</span>
+                        <span>কষ্ট পাই, তবু থাকি নিজের বাসায়।</span>
+                        <span>পাকা হোক, তবু ভাই, পরের ও বাসা,</span>
+                        <span>নিজ হাতে গড়া মোর কাঁচা ঘর, খাসা।”</span>
+                    </p>
+                    <p class="poem__en">
+                        <span>The sparrow mocks the weaver bird: “You live in a straw hut and boast of your craft, while I live in comfort on a mansion and you suffer sun, rain and storm.”</span>
+                        <span>The weaver laughs: “No doubt. Yet I live in a home of my own. Brick it may be, brother — but yours is another's house. Mine is raw, built with my own hands, and it is splendid.”</span>
+                    </p>
+                    <cite class="mono">Rajanikanta Sen · <span lang="bn">স্বাধীনতার সুখ</span></cite>
+                </blockquote>
+            </div>
+        </div>
+
+        <ol class="laws">
+            <li>
+                <span class="laws__n">i.</span>
+                <h3>Waste nothing</h3>
+                <p>Trimmings and short ends are gathered and twisted back into fine twine, trims and tassels.</p>
+            </li>
+            <li>
+                <span class="laws__n">ii.</span>
+                <h3>Hold by tension</h3>
+                <p>No glue, no laminated backing. Braid and crochet keep their shape through friction alone.</p>
+            </li>
+            <li>
+                <span class="laws__n">iii.</span>
+                <h3>Return to earth</h3>
+                <p>When its season ends, the nest dissolves into the soil. Every piece is made to do the same.</p>
+            </li>
+        </ol>
+    </section>
+
+
+    <!-- ═══════════ INTERLUDE · FILM ═══════════ -->
+    <section class="film" id="film" data-bg="#120D09" data-chapter="—" data-name="Interlude" data-theme="dark" aria-labelledby="filmTitle">
+        <div class="film__pin">
+            <div class="film__frame" id="filmFrame" data-cursor="Pause">
+                <video class="film__video" id="filmVideo" muted loop playsinline preload="metadata"
+                       poster="assets/web/film-braiding-poster.jpg"
+                       aria-label="Silent footage: women seated on the workshop floor braiding raw jute rope by hand">
+                    <source src="assets/web/film-braiding-loop.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="film__overlay">
+                <p class="mono">Interlude · Howrah, September 2022</p>
+                <h2 id="filmTitle"><span>The rhythm</span> <em>of the braid</em></h2>
+            </div>
+            <button type="button" class="film__toggle mono" id="filmToggle" aria-pressed="false">Pause film</button>
+        </div>
+    </section>
+
+
+    <!-- ═══════════ III · THE HANDS ═══════════ -->
+    <section class="hands" id="hands" data-bg="#EDE4D3" data-chapter="III" data-name="The Hands" data-theme="light" aria-labelledby="handsTitle">
+        <div class="hands__intro">
+            <p class="mono">Chapter III</p>
+            <h2 id="handsTitle" class="visually-hidden">The Hands</h2>
+            <p class="hands__count" aria-label="Sixty-five"><span id="handsCount">65</span></p>
+            <p class="hands__lead">women in the villages of Howrah and Nadia form the spine of the collective. Not factory labour — the living memory of Bengal's hand.</p>
+        </div>
+
+        <div class="hands__split">
+            <figure class="hands__portrait">
+                <div class="hands__portrait-crop"><img src="assets/web/artisan-portrait.jpg" alt="A senior artisan in spectacles twists raw jute fibre between her fingers, other women working behind her" loading="lazy" width="1400" height="931"></div>
+                <figcaption class="mono">Plate I — The twisting hands · Howrah, 2022</figcaption>
+            </figure>
+
+            <div class="hands__words">
+                <p>For generations the trade kept these artisans invisible while middlemen kept the margin. Divulge works differently: wages set well above prevailing rural rates, safe and dignified workspaces, no child labour, continuous training — so that mastery, and the income it earns, stay in the village.</p>
+
+                <!-- TODO before launch: replace with a real, consented testimony (name, words).
+                     "Sunita Devi" is the archetype from the client's draft copy, not a recorded interview. -->
+                <figure class="hands__quote">
+                    <blockquote>“Before Divulge, I had no income of my own. Today I am educating my daughter, and I guide the younger artisans in zero-waste knotting.”</blockquote>
+                    <figcaption class="mono">Sunita Devi · Senior artisan</figcaption>
+                </figure>
+            </div>
+        </div>
+
+        <div class="deck" id="deck">
+            <p class="deck__label mono">The generational plates</p>
+            <div class="deck__cards">
+                <figure class="card">
+                    <img src="assets/web/plate-braiding-circle.jpg" alt="Artisans seated together braiding jute rope" loading="lazy" width="1100" height="732">
+                    <figcaption><span class="mono">II · Hand-braiding</span><b>The braiding circle</b></figcaption>
+                </figure>
+                <figure class="card">
+                    <img src="assets/web/plate-circular-weave.jpg" alt="Two artisans stitching braided jute into circular mats" loading="lazy" width="1100" height="825">
+                    <figcaption><span class="mono">III · Coil &amp; stitch</span><b>The circular weave</b></figcaption>
+                </figure>
+                <figure class="card">
+                    <img src="assets/web/plate-floor-mandala.jpg" alt="Artisans kneeling around a room-sized jute floor piece patterned with medallions" loading="lazy" width="1100" height="507">
+                    <figcaption><span class="mono">IV · Large format</span><b>The floor mandala</b></figcaption>
+                </figure>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ═══════════ IV · THE RETURN ═══════════ -->
+    <section class="return" id="return" data-bg="#E0D0B4" data-chapter="IV" data-name="The Return" data-theme="light" aria-labelledby="returnTitle">
+        <div class="return__pin" id="bioConsole" style="--p: 0">
+            <!-- pigment strata rise as the days pass -->
+            <svg class="strata" viewBox="0 0 1440 400" preserveAspectRatio="none" aria-hidden="true">
+                <path class="strata__1" d="M0 120 C 240 70, 420 160, 720 110 S 1200 60, 1440 120 L1440 400 L0 400 Z"/>
+                <path class="strata__2" d="M0 190 C 300 150, 520 230, 760 180 S 1180 140, 1440 190 L1440 400 L0 400 Z"/>
+                <path class="strata__3" d="M0 260 C 260 230, 560 300, 820 250 S 1240 220, 1440 262 L1440 400 L0 400 Z"/>
+                <path class="strata__4" d="M0 330 C 280 300, 600 360, 880 320 S 1260 300, 1440 334 L1440 400 L0 400 Z"/>
+            </svg>
+
+            <div class="return__head">
+                <p class="mono">Chapter IV</p>
+                <h2 id="returnTitle" data-reveal>The Return</h2>
+                <p class="return__day"><span id="dayReadout">0</span><small>/ 45 days</small></p>
+            </div>
+
+            <div class="return__specimens">
+                <div class="specimen specimen--jute">
+                    <p class="specimen__label mono">Jute · plant cellulose</p>
+                    <svg class="specimen__svg" viewBox="0 0 300 120" aria-hidden="true">
+                        <defs>
+                            <pattern id="juteWeave" width="12" height="12" patternUnits="userSpaceOnUse">
+                                <rect width="12" height="12" fill="#B58D55"/>
+                                <path d="M0 3 H12 M0 9 H12" stroke="#D7B57C" stroke-width="3.4"/>
+                                <path d="M3 0 V6 M9 6 V12" stroke="#94713F" stroke-width="3.4"/>
+                            </pattern>
+                        </defs>
+                        <rect class="soil-bed" x="0" y="56" width="300" height="64"/>
+                        <rect class="jute-swatch" x="60" y="44" width="180" height="22" rx="2" fill="url(#juteWeave)"/>
+                        <g class="hyphae"><path d="M70 66 Q90 56 110 64 T150 60"/><path d="M140 70 Q160 54 186 62 T228 58"/><path d="M96 74 Q120 66 132 52"/><path d="M200 74 Q214 62 236 66"/></g>
+                        <rect class="humus-layer" x="0" y="50" width="300" height="20"/>
+                        <g class="sprout"><path d="M150 52 Q148 36 152 22" fill="none" stroke="#5B5A32" stroke-width="2.2" stroke-linecap="round"/><path d="M151 32 Q136 22 128 28 Q138 36 151 32 Z M152 26 Q166 14 176 20 Q166 30 152 26 Z" fill="#7E8355"/></g>
+                    </svg>
+                    <p class="specimen__phase mono" id="jutePhase">Fresh burial</p>
+                    <p class="specimen__text" id="juteStatus">A finished jute weave rests on moist loam. The fibre network is intact.</p>
+                    <div class="meter"><div class="meter__fill meter__fill--jute" id="juteMeter"></div></div>
+                    <p class="specimen__pct mono"><span id="jutePercent">0%</span> biodegraded</p>
+                </div>
+
+                <div class="specimen specimen--plastic">
+                    <p class="specimen__label mono">Polypropylene · "eco" bag</p>
+                    <svg class="specimen__svg" viewBox="0 0 300 120" aria-hidden="true">
+                        <rect class="soil-bed" x="0" y="56" width="300" height="64"/>
+                        <rect class="plastic-swatch" x="60" y="44" width="180" height="22" rx="2"/>
+                        <g class="plastic-cracks"><path d="M96 44 L104 56 L98 66"/><path d="M150 44 L144 54 L156 60 L150 66"/><path d="M204 44 L212 56 L206 66"/></g>
+                        <g class="microplastics"><rect x="40" y="80" width="3" height="2"/><rect x="88" y="98" width="2" height="3"/><rect x="116" y="76" width="3" height="2"/><rect x="142" y="110" width="2" height="2"/><rect x="170" y="86" width="3" height="2"/><rect x="198" y="102" width="2" height="3"/><rect x="230" y="80" width="3" height="2"/><rect x="258" y="98" width="2" height="2"/><rect x="62" y="110" width="2" height="2"/><rect x="214" y="112" width="3" height="2"/></g>
+                    </svg>
+                    <p class="specimen__phase mono" id="plasticPhase">Petrochemical lock</p>
+                    <p class="specimen__text" id="plasticStatus">Polymer chains offer soil microbes nothing to digest. The surface stays sealed.</p>
+                    <div class="meter"><div class="meter__fill meter__fill--plastic" id="plasticMeter"></div></div>
+                    <p class="specimen__pct mono"><span id="plasticPercent">0%</span> biodegraded</p>
+                </div>
+            </div>
+
+            <div class="return__control">
+                <label class="visually-hidden" for="bioSlider">Days in soil</label>
+                <input type="range" min="0" max="45" step="1" value="0" id="bioSlider" class="return__slider" aria-valuetext="Day 0 of 45">
+                <p class="return__note">Indicative timeline for untreated jute in warm, moist, living soil; real rates vary with climate and weave. Polypropylene does not biodegrade on this timescale — it fragments.</p>
+            </div>
+        </div>
+
+        <!-- Ecological economics -->
+        <div class="ledger" id="ledger">
+            <div class="ledger__head">
+                <p class="mono">The ecological ledger</p>
+                <h3>Plastic wins one row — <em>the price tag.</em> Every other row is the bill that arrives later.</h3>
+            </div>
+
+            <table class="ledger__table">
+                <caption class="visually-hidden">Jute and plastic scored from 1 to 10 on five parameters, where 10 is the strongest positive value</caption>
+                <thead><tr><th scope="col">Parameter · 1–10</th><th scope="col">Jute</th><th scope="col">Plastic</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Initial cost benefit</th><td><span class="bar" style="--s:3"></span>3</td><td><span class="bar bar--p" style="--s:8"></span>8</td></tr>
+                    <tr><th scope="row">Societal value</th><td><span class="bar" style="--s:8"></span>8</td><td><span class="bar bar--p" style="--s:2"></span>2</td></tr>
+                    <tr><th scope="row">Ecological value</th><td><span class="bar" style="--s:10"></span>10</td><td><span class="bar bar--p" style="--s:1"></span>1</td></tr>
+                    <tr><th scope="row">Disposal &amp; clean-up</th><td><span class="bar" style="--s:8"></span>8</td><td><span class="bar bar--p" style="--s:2"></span>2</td></tr>
+                    <tr><th scope="row">Ethical value</th><td><span class="bar" style="--s:10"></span>10</td><td><span class="bar bar--p" style="--s:1"></span>1</td></tr>
+                </tbody>
+                <tfoot><tr><th scope="row">Weighted index</th><td class="ledger__total">7.8</td><td class="ledger__total ledger__total--p">4.2</td></tr></tfoot>
+            </table>
+            <p class="ledger__source">Source: Divulge research brief, <em>Ecological Economics of Jute</em>.</p>
+        </div>
+    </section>
+
+
+    <!-- ═══════════ V · THE EXCHANGE ═══════════ -->
+    <section class="exchange" id="exchange" data-bg="#55542F" data-chapter="V" data-name="The Exchange" data-theme="olive" aria-labelledby="exchangeTitle">
+        <div class="exchange__intro">
+            <p class="mono">Chapter V</p>
+            <h2 id="exchangeTitle" data-reveal>The Exchange</h2>
+            <p class="exchange__lead">This archive is not a storefront. Shaped by conversations with Padma Bhushan design visionary <em>Rajiv Sethi</em> of the Asian Heritage Foundation, Divulge carries grassroots Bengal craft into museums, pavilions and design dialogue — documenting techniques before they vanish.</p>
+        </div>
+
+        <ol class="record" id="record">
+            <li class="record__item">
+                <img src="assets/web/expo-icar-ninfet-2022.jpg" alt="A stall with a banner reading 'M/s. Divulge, ICAR-NINFET Start up'" loading="lazy" width="675" height="900">
+                <p class="mono">Mar 2022 · Kolkata</p><p>ICAR-NINFET start-up stall</p>
+            </li>
+            <li class="record__item">
+                <img src="assets/web/expo-berlin-2022.jpg" alt="The Divulge stand 1B-37 with jute bags on white shelves" loading="lazy" width="900" height="675">
+                <p class="mono">Jul 2022 · Berlin</p><p>Messe Berlin, stand 1B-37</p>
+            </li>
+            <li class="record__item">
+                <img src="assets/web/expo-njb-pavilion-2022.jpg" alt="A National Jute Board pavilion booth with jute bags" loading="lazy" width="900" height="675">
+                <p class="mono">Aug 2022 · Kolkata</p><p>National Jute Board pavilion</p>
+            </li>
+            <li class="record__item">
+                <img src="assets/web/expo-rajiv-sethi.jpg" alt="Padma Bhushan Rajiv Sethi at the Divulge exhibition stand" loading="lazy" width="675" height="900">
+                <p class="mono">2024</p><p>With Rajiv Sethi at the stand</p>
+            </li>
+        </ol>
+
+        <div class="exchange__split">
+            <dl class="creds">
+                <div><dt>National Jute Board</dt><dd>JDP Reg. NJB-09-JDP-20022025-951</dd></div>
+                <div><dt>MSME Udyam</dt><dd>UDYAM-WB-10-0013953</dd></div>
+                <div><dt>Jute Corporation of India</dt><dd>Empanelled partner</dd></div>
+                <div><dt>ICAR-NINFET</dt><dd>Start-up stall, Kolkata 2022</dd></div>
+                <div><dt>DGFT IEC</dt><dd>AUJPG7653C</dd></div>
+            </dl>
+
+            <form class="enquiry" id="inquiryForm" data-recipient="divulgejute.official@gmail.com">
+                <p class="enquiry__title">Write to the archive</p>
+                <div class="field"><label for="inqName">Name</label><input id="inqName" name="name" required autocomplete="name"></div>
+                <div class="field"><label for="inqInstitution">Institution</label><input id="inqInstitution" name="institution" required autocomplete="organization"></div>
+                <div class="field"><label for="inqEmail">Email</label><input id="inqEmail" name="email" type="email" required autocomplete="email"></div>
+                <div class="field">
+                    <label for="inqType">Engagement</label>
+                    <select id="inqType" name="engagement">
+                        <option>Fibre specimens &amp; a physical dossier</option>
+                        <option>A museum or pavilion exhibition</option>
+                        <option>A zero-waste jute installation</option>
+                        <option>A weaving fellowship or residency</option>
+                        <option>Ethical institutional procurement</option>
+                    </select>
+                </div>
+                <div class="field"><label for="inqMessage">Proposal</label><textarea id="inqMessage" name="message" rows="3"></textarea></div>
+                <button type="submit" class="enquiry__send"><span class="enquiry__label">Compose the letter</span><span aria-hidden="true">→</span></button>
+                <p class="enquiry__note mono" id="dossierNote" aria-live="polite">Opens your email app, addressed to divulgejute.official@gmail.com</p>
+            </form>
+        </div>
+    </section>
+    </main>
+
+
+    <!-- ═══════════ COLOPHON ═══════════ -->
+    <footer class="colophon" data-theme="dark">
+        <div class="colophon__cols">
+            <p class="colophon__line">Sown in silt.<br>Braided by hand.<br><em>Returned to the soil.</em></p>
+            <div class="mono">
+                <p>Amraberia, Howrah<br>West Bengal 711303, India</p>
+                <p><a href="mailto:divulgejute.official@gmail.com">divulgejute.official@gmail.com</a></p>
+            </div>
+            <div class="mono">
+                <p>GSTIN 19AUJPG7653C1ZJ<br>Udyam UDYAM-WB-10-0013953<br>Trade Mark Reg. 2909685</p>
+            </div>
+        </div>
+        <p class="colophon__word" id="colophonWord" aria-hidden="true">divulge<span>living</span></p>
+        <p class="colophon__legal mono">© 2026 Divulge Living · Howrah, West Bengal</p>
+    </footer>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
