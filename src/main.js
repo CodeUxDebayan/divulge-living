@@ -35,10 +35,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (reduceMotion) {
         document.documentElement.classList.remove('motion');
-        initStatic(bio);
+        document.fonts.ready.then(() => initStatic(bio));
         return;
     }
-    initMotion(bio);
+    document.fonts.ready.then(() => initMotion(bio));
 });
 
 /* ═══════════════════════════════════════════════════════════════
