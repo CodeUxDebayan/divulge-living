@@ -693,6 +693,7 @@ function createSound() {
     let ctx = null;
     let enabled = false;
     let bgAudio = null;
+    let pluckAudio = null;
 
     const ensure = () => { 
         if (!ctx && Ctx) ctx = new Ctx(); 
@@ -700,6 +701,7 @@ function createSound() {
         if (!bgAudio) {
             bgAudio = new Audio('bg-audio.mp3');
             bgAudio.loop = true;
+            pluckAudio = new Audio('pluck.mp3');
         }
         return ctx; 
     };
@@ -716,22 +718,13 @@ function createSound() {
                 if (ctx) ctx.suspend();
             }
         },
-        // A plucked jute string: a warm partial pair with a quick decay, louder the further it was pulled
+        // A plucked jute string
         pluck(amount) {
-            if (!enabled || !ctx || amount < 0.05) return;
-            const t = ctx.currentTime;
-            [196, 392.4].forEach((freq, i) => {
-                const o = ctx.createOscillator(), g = ctx.createGain();
-                o.type = i ? 'sine' : 'triangle';
-                o.frequency.setValueAtTime(freq * (1 + amount * 0.02), t);
-                o.frequency.exponentialRampToValueAtTime(freq, t + 0.3);
-                g.gain.setValueAtTime(0.0001, t);
-                g.gain.exponentialRampToValueAtTime(0.12 * amount / (i + 1), t + 0.01);
-                g.gain.exponentialRampToValueAtTime(0.0001, t + 1.6);
-                o.connect(g).connect(ctx.destination);
-                o.start(t); o.stop(t + 1.7);
-            });
-        },
+            if (!enabled || !pluckAudio || amount < 0.05) return;
+            const clone = pluckAudio.cloneNode();
+            clone.volume = Math.min(1, amount * 1.2);
+            clone.play().catch(() => {});
+        }
     };
 }
 
