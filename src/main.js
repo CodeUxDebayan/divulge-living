@@ -156,7 +156,7 @@ function prologue() {
         .to('.hero__watermark', { opacity: 0, yPercent: -20, duration: 0.35, ease: 'power1.in' }, 0)
         .fromTo(media, { clipPath: geo.arch }, { clipPath: geo.full, ease: 'power2.inOut', duration: 0.8 }, 0.08)
         .to(img, { scale: 1, ease: 'none', duration: 1 }, 0)
-        .to('.hero__cue, .hero__hint, .hero__strand', { opacity: 0, duration: 0.2 }, 0)
+        .to('.hero__cue, .hero__hint', { opacity: 0, duration: 0.2 }, 0)
         .to('.hero__shade', { opacity: 1, duration: 0.5 }, 0.3)
         .fromTo('#heroReveal', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 0.45)
         .to({}, { duration: 0.2 });
