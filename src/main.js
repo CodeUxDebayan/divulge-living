@@ -145,6 +145,7 @@ function prologue() {
         .from(lines, { yPercent: 110, duration: 1.4, stagger: 0.12 }, 0.2)
         .fromTo(media, { clipPath: geo.closed }, { clipPath: geo.arch, duration: 1.8, ease: 'expo.inOut' }, 0.1)
         .from(img, { scale: 1.35, duration: 2.2 }, 0.1)
+        .from('.hero__watermark', { opacity: 0, scale: 0.95, duration: 1.8, ease: 'power2.out' }, 0.3)
         .from('.hero__strand', { opacity: 0, duration: 1.4 }, 1)
         .from('.hero__hint, .hero__cue', { opacity: 0, duration: 1 }, 1.4);
 
@@ -152,6 +153,7 @@ function prologue() {
         scrollTrigger: { trigger: '.hero', start: 'top top', end: '+=120%', pin: '.hero__pin', scrub: 1 },
     })
         .to(['.hero__title', '.hero__meta'], { yPercent: -35, opacity: 0, ease: 'power2.in', duration: 0.45 }, 0)
+        .to('.hero__watermark', { opacity: 0, yPercent: -20, duration: 0.35, ease: 'power1.in' }, 0)
         .to(media, { clipPath: geo.full, ease: 'power2.inOut', duration: 0.8 }, 0.08)
         .to(img, { scale: 1, ease: 'none', duration: 1 }, 0)
         .to('.hero__cue, .hero__hint, .hero__strand', { opacity: 0, duration: 0.2 }, 0)
