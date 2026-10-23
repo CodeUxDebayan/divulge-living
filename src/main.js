@@ -32,6 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initFilmToggle();
     initSoundToggle();
     initEnquiryForm();
+    initScrollTop();
+    initYear();
 
     if (reduceMotion) {
         document.documentElement.classList.remove('motion');
@@ -370,21 +372,15 @@ function hands() {
         scrollTrigger: { trigger: '.hands__quote', start: 'top 80%', end: 'bottom 45%', scrub: true },
     });
 
-    const mm = gsap.matchMedia();
-    mm.add('(min-width: 861px)', () => {
-        const cards = $$('.card');
-        gsap.set(cards, { xPercent: -50, yPercent: -50, rotation: (i) => [-7, 4, 10][i], y: (i) => i * 6 });
-        gsap.timeline({ scrollTrigger: { trigger: '#deck', start: 'top 12%', end: '+=110%', pin: true, scrub: 1 } })
-            .to(cards, { xPercent: (i) => [-162, -50, 62][i], rotation: (i) => [-4, 0, 4][i], y: (i) => [24, -12, 24][i], ease: 'power2.inOut' })
-            .to({}, { duration: 0.3 });
+    gsap.from('.impact-banner', {
+        y: 40, opacity: 0, duration: 1.1, ease: 'expo.out',
+        scrollTrigger: { trigger: '#impact', start: 'top 80%' },
     });
-    mm.add('(max-width: 860px)', () => {
-        const cards = $$('.card');
-        gsap.set(cards, { clearProps: 'all' });
-        gsap.from(cards, {
-            y: 40, opacity: 0, stagger: 0.15, duration: 0.9, ease: 'expo.out',
-            scrollTrigger: { trigger: '#deck', start: 'top 85%' },
-        });
+
+    const cards = $$('.card');
+    gsap.from(cards, {
+        y: 40, opacity: 0, stagger: 0.12, duration: 0.9, ease: 'expo.out',
+        scrollTrigger: { trigger: '#deck', start: 'top 80%' },
     });
 }
 
@@ -425,6 +421,10 @@ function exchange() {
             y: -40 - i * 20, ease: 'none',
             scrollTrigger: { trigger: '#record', start: 'top bottom', end: 'bottom top', scrub: true },
         });
+    });
+    gsap.from('.patron-spotlight', {
+        y: 40, opacity: 0, duration: 1.1, ease: 'expo.out',
+        scrollTrigger: { trigger: '#patron-highlight', start: 'top 80%' },
     });
     gsap.from('.creds div, .field, .enquiry__send', {
         y: 24, opacity: 0, stagger: 0.05, duration: 0.9, ease: 'expo.out',
@@ -687,7 +687,7 @@ function initFilmToggle() {
     render();
 }
 
-/* Sound: a Web Audio loom rhythm, and the note of the plucked strand ─ */
+/* Sound: ambient soundtrack and the note of the plucked strand ───── */
 function createSound() {
     const Ctx = window.AudioContext || window.webkitAudioContext;
     let ctx = null;
@@ -696,28 +696,46 @@ function createSound() {
     let pluckAudio = new Audio('pluck.mp3');
 
     const ensure = () => { 
-        if (!ctx && Ctx) ctx = new Ctx(); 
-        if (ctx) ctx.resume(); 
+        if (!ctx && Ctx) {
+            try { ctx = new Ctx(); } catch (e) {}
+        }
+        if (ctx && ctx.state === 'suspended') ctx.resume().catch(() => {}); 
         if (!bgAudio) {
             bgAudio = new Audio('bg-audio.mp3');
             bgAudio.loop = true;
+            bgAudio.volume = 0.55;
         }
         return ctx; 
     };
 
     return {
         available: true,
+        isEnabled() { return enabled; },
         setEnabled(on) {
             enabled = on;
+            ensure();
+            const btn = $('#soundToggle');
+            const text = $('#soundBtnText');
             if (on) {
-                ensure();
-                bgAudio.play().catch(e => console.warn('Audio play blocked:', e));
+                if (btn) btn.setAttribute('aria-pressed', 'true');
+                if (text) text.textContent = 'Mute';
+                if (bgAudio) {
+                    const p = bgAudio.play();
+                    if (p !== undefined) {
+                        p.catch(() => {
+                            if (btn) btn.setAttribute('aria-pressed', 'false');
+                            if (text) text.textContent = 'Sound';
+                            enabled = false;
+                        });
+                    }
+                }
             } else {
+                if (btn) btn.setAttribute('aria-pressed', 'false');
+                if (text) text.textContent = 'Sound';
                 if (bgAudio) bgAudio.pause();
-                if (ctx) ctx.suspend();
+                if (ctx && ctx.state === 'running') ctx.suspend().catch(() => {});
             }
         },
-        // A plucked jute string
         pluck(amount) {
             if (!pluckAudio || amount < 0.05) return;
             const clone = pluckAudio.cloneNode();
@@ -729,12 +747,51 @@ function createSound() {
 
 function initSoundToggle() {
     const btn = $('#soundToggle');
-    if (!sound.available) { btn.hidden = true; return; }
+    if (!btn || !sound.available) { if (btn) btn.hidden = true; return; }
+
+    let userHasToggled = false;
+
     btn.addEventListener('click', () => {
-        const on = btn.getAttribute('aria-pressed') !== 'true';
-        btn.setAttribute('aria-pressed', String(on));
-        sound.setEnabled(on);
+        userHasToggled = true;
+        const willEnable = btn.getAttribute('aria-pressed') !== 'true';
+        sound.setEnabled(willEnable);
     });
+
+    // Attempt autoplay immediately
+    sound.setEnabled(true);
+
+    // Fallback: unlock on first interaction if blocked by browser policy
+    const unlockOnGesture = () => {
+        if (!userHasToggled && !sound.isEnabled()) {
+            sound.setEnabled(true);
+        }
+        window.removeEventListener('pointerdown', unlockOnGesture);
+        window.removeEventListener('scroll', unlockOnGesture);
+        window.removeEventListener('keydown', unlockOnGesture);
+    };
+    window.addEventListener('pointerdown', unlockOnGesture, { once: true, passive: true });
+    window.addEventListener('scroll', unlockOnGesture, { once: true, passive: true });
+    window.addEventListener('keydown', unlockOnGesture, { once: true, passive: true });
+}
+
+function initScrollTop() {
+    const btn = $('#scrollTopBtn');
+    if (!btn) return;
+    const update = () => {
+        const y = window.scrollY || (lenis ? lenis.scroll : 0);
+        btn.classList.toggle('is-visible', y > 450);
+    };
+    window.addEventListener('scroll', update, { passive: true });
+    if (lenis) lenis.on('scroll', update);
+    btn.addEventListener('click', () => {
+        if (lenis) lenis.scrollTo(0, { duration: 1.2 });
+        else window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+}
+
+function initYear() {
+    const yr = $('#copyrightYear');
+    if (yr) yr.textContent = new Date().getFullYear();
 }
 
 /* Enquiry: no backend yet, so compose the letter in the visitor's mail app ─ */
