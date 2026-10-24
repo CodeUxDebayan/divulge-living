@@ -28,6 +28,7 @@ const sound = createSound();
 
 document.addEventListener('DOMContentLoaded', () => {
     const bio = createBioConsole();
+    initEmailObfuscation();
     initIndexPanel();
     initFilmToggle();
     initSoundToggle();
@@ -806,10 +807,39 @@ function initYear() {
     if (yr) yr.textContent = new Date().getFullYear();
 }
 
+function decodeEmail(b64) {
+    if (!b64) return '';
+    try {
+        return atob(b64);
+    } catch {
+        return '';
+    }
+}
+
+/* Obfuscation: reconstruct email on DOM ready to protect from scrapers & spambots */
+function initEmailObfuscation() {
+    $$('[data-obf-email]').forEach((el) => {
+        const email = decodeEmail(el.dataset.obfEmail);
+        if (!email) return;
+        el.setAttribute('href', `mailto:${email}`);
+        if (!el.dataset.preserveText) {
+            el.textContent = email;
+        }
+    });
+
+    const form = $('#inquiryForm');
+    const target = $('#dossierEmailTarget');
+    if (form && target) {
+        const email = decodeEmail(form.dataset.recipientB64);
+        if (email) target.textContent = email;
+    }
+}
+
 /* Enquiry: no backend yet, so compose the letter in the visitor's mail app ─ */
 function initEnquiryForm() {
     const form = $('#inquiryForm');
-    const recipient = form.dataset.recipient;
+    if (!form) return;
+    const recipient = decodeEmail(form.dataset.recipientB64);
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         const d = new FormData(form);
