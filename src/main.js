@@ -66,6 +66,7 @@ function initMotion(bio) {
     soilReturn(bio);
     ledger();
     exchange();
+    founders();
     colophon();
     headings();
 
@@ -429,6 +430,17 @@ function exchange() {
     gsap.from('.creds div, .field, .enquiry__send', {
         y: 24, opacity: 0, stagger: 0.05, duration: 0.9, ease: 'expo.out',
         scrollTrigger: { trigger: '.exchange__split', start: 'top 80%' },
+    });
+}
+
+function founders() {
+    gsap.from('.founder-card', {
+        y: 40, opacity: 0, stagger: 0.18, duration: 1.1, ease: 'expo.out',
+        scrollTrigger: { trigger: '.founders__grid', start: 'top 80%' },
+    });
+    gsap.from('.founders__amata-callout', {
+        y: 30, opacity: 0, duration: 1, ease: 'expo.out',
+        scrollTrigger: { trigger: '.founders__amata-callout', start: 'top 85%' },
     });
 }
 
