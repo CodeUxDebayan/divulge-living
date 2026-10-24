@@ -139,10 +139,15 @@ h3 { font-size: clamp(1.5rem, 2.2vw, 2.1rem); line-height: 1.1; }
     color: inherit;
 }
 .nav__logo {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     object-fit: contain;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.12));
+    flex-shrink: 0;
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.12));
+    transition: transform 0.4s var(--ease);
+}
+.nav__mark:hover .nav__logo {
+    transform: scale(1.08) rotate(-4deg);
 }
 .nav__brand-name {
     display: inline-flex;
@@ -903,6 +908,14 @@ h3 { font-size: clamp(1.5rem, 2.2vw, 2.1rem); line-height: 1.1; }
 .colophon__cols { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 2rem; }
 .colophon__line { font-family: var(--serif); font-size: clamp(1.6rem, 2.8vw, 2.6rem); line-height: 1.1; }
 .colophon__line em { color: var(--gold); }
+.colophon__logo-mark {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    margin-bottom: 1.2rem;
+    display: block;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+}
 .colophon .mono { text-transform: none; letter-spacing: 0.04em; line-height: 1.8; opacity: 0.75; }
 .colophon .mono p + p { margin-top: 1rem; }
 .colophon__word {
