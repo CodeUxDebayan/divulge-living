@@ -36,6 +36,8 @@ IMAGES = [
     ("images/founder_and_journey/IMG_20220302_105524.jpg",       "expo-icar-ninfet-2022.jpg",  900),
     ("images/founder_and_journey/20220820_021154.jpg",           "expo-njb-pavilion-2022.jpg", 900),
     ("images/founder_and_journey/The great Rajiv Sethi.JPG",     "expo-rajiv-sethi.jpg",       900),
+    ("images/founder_and_journey/founder-nilay-headshot.jpg",     "founder-nilay.jpg",          900),
+    ("images/founder_and_journey/founder-kanika-headshot.jpg",    "founder-kanika.jpg",         900),
 ]
 
 # Silent documentary loop: hand-braiding footage from the Sept 2022 Howrah shoot.
