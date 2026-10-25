@@ -465,10 +465,11 @@ h3 { font-size: clamp(1.5rem, 2.2vw, 2.1rem); line-height: 1.1; }
     width: 100%;
     max-height: 58vh;
     object-fit: contain;
-    transition: transform 0.6s var(--ease);
+    will-change: opacity, transform;
 }
 .nest__mascot-img:hover {
     transform: scale(1.03);
+    transition: transform 0.4s var(--ease);
 }
 .nest__svg { width: 100%; max-height: 72vh; }
 .nest__svg .d { stroke: var(--gold); stroke-width: 1.6; stroke-linecap: round; }

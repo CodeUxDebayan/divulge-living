@@ -288,16 +288,31 @@ function strand() {
 
 /* II · The Nest ──────────────────────────────────────────────── */
 function nest() {
-    const strokes = $$('#nestSvg .d');
-    const weave = $$('#nestSvg .d-weave .d');
-    const frame = strokes.filter((p) => !weave.includes(p));
+    const mascot = $('.nest__mascot-img');
+    const caption = $('.nest__caption');
 
-    const build = (tl) => tl
-        .from(frame, { drawSVG: '0%', stagger: 0.12, duration: 0.6, ease: 'none' }, 0)
-        .from(weave, { drawSVG: '0%', stagger: 0.05, duration: 0.35, ease: 'none' }, 0.55)
-        .fromTo('.poem__bn span', { opacity: 0.12 }, { opacity: 1, stagger: 0.12, duration: 0.2 }, 0.1)
-        .from('.poem__en span', { opacity: 0, y: 20, stagger: 0.25, duration: 0.3 }, 0.95)
-        .from('.poem cite', { opacity: 0, duration: 0.2 }, 1.3);
+    const build = (tl) => {
+        if (mascot) {
+            tl.fromTo(mascot,
+                { opacity: 0, y: 45, scale: 0.94 },
+                { opacity: 1, y: 0, scale: 1, duration: 0.75, ease: 'power2.out' },
+                0
+            );
+        }
+        if (caption) {
+            tl.fromTo(caption,
+                { opacity: 0, y: 16 },
+                { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
+                0.25
+            );
+        }
+        tl
+            .fromTo('.poem__bn span', { opacity: 0.12 }, { opacity: 1, stagger: 0.12, duration: 0.2 }, 0.1)
+            .from('.poem__en span', { opacity: 0, y: 20, stagger: 0.25, duration: 0.3 }, 0.95)
+            .from('.poem cite', { opacity: 0, duration: 0.2 }, 1.3);
+
+        return tl;
+    };
 
     const mm = gsap.matchMedia();
     mm.add('(min-width: 861px)', () => build(gsap.timeline({
