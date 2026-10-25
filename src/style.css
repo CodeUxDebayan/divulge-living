@@ -926,7 +926,28 @@ h3 { font-size: clamp(1.5rem, 2.2vw, 2.1rem); line-height: 1.1; }
     margin: clamp(3rem, 6vw, 5rem) 0 1rem -0.05em;
     white-space: nowrap;
 }
-.colophon__legal { opacity: 0.5; padding-bottom: 2.4rem; }
+.colophon__legal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem 2rem;
+    opacity: 0.65;
+    padding-bottom: 2.4rem;
+    font-size: 0.85rem;
+}
+.colophon__legal p { margin: 0; }
+.colophon__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: rgba(201, 164, 106, 0.45);
+    transition: color 0.2s, text-decoration-color 0.2s;
+}
+.colophon__credit a:hover {
+    color: var(--gold);
+    text-decoration-color: var(--gold);
+}
 @media (max-width: 860px) { .colophon__cols { grid-template-columns: 1fr; } }
 
 /* ─── Split text helpers ─── */
