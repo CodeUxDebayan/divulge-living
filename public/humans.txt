@@ -1,0 +1,11 @@
+/* TEAM */
+Architect & Lead Developer: Debayan Mukherjee
+LinkedIn: https://www.linkedin.com/in/dev-web3000/
+Role: Technical Architecture, Motion Design & Web Development
+Location: Kolkata, West Bengal, India
+
+/* SITE */
+Standards: HTML5, CSS3, ESNext
+Tools: GSAP, Lenis, Vite
+Client: Divulge Living (Howrah & Kolkata, West Bengal)
+Date: 2026

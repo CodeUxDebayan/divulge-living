@@ -27,6 +27,14 @@ let filmPausedByVisitor = false;
 const sound = createSound();
 
 document.addEventListener('DOMContentLoaded', () => {
+    try {
+        console.info(
+            '%c Divulge Living %c Crafted with Golden Jute · Engineered by Debayan Mukherjee (https://www.linkedin.com/in/dev-web3000/) ',
+            'background:#1D1510;color:#C9A46A;font-weight:600;padding:4px 8px;border-radius:2px 0 0 2px;',
+            'background:#EDE4D3;color:#1D1510;padding:4px 8px;border-radius:0 2px 2px 0;'
+        );
+    } catch {}
+
     const bio = createBioConsole();
     initEmailObfuscation();
     initIndexPanel();
@@ -294,22 +302,28 @@ function nest() {
     const build = (tl) => {
         if (mascot) {
             tl.fromTo(mascot,
-                { opacity: 0, y: 45, scale: 0.94 },
-                { opacity: 1, y: 0, scale: 1, duration: 0.75, ease: 'power2.out' },
+                { opacity: 0, y: 50, scale: 0.94 },
+                { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'power2.out' },
                 0
-            );
+            )
+            .to(mascot, {
+                opacity: 0, y: -40, scale: 0.97, duration: 0.45, ease: 'power2.in'
+            }, 1.25);
         }
         if (caption) {
             tl.fromTo(caption,
-                { opacity: 0, y: 16 },
+                { opacity: 0, y: 20 },
                 { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
-                0.25
-            );
+                0.2
+            )
+            .to(caption, {
+                opacity: 0, y: -20, duration: 0.4, ease: 'power2.in'
+            }, 1.3);
         }
         tl
             .fromTo('.poem__bn span', { opacity: 0.12 }, { opacity: 1, stagger: 0.12, duration: 0.2 }, 0.1)
-            .from('.poem__en span', { opacity: 0, y: 20, stagger: 0.25, duration: 0.3 }, 0.95)
-            .from('.poem cite', { opacity: 0, duration: 0.2 }, 1.3);
+            .from('.poem__en span', { opacity: 0, y: 20, stagger: 0.25, duration: 0.3 }, 0.85)
+            .from('.poem cite', { opacity: 0, duration: 0.2 }, 1.2);
 
         return tl;
     };
@@ -366,12 +380,14 @@ function film() {
 /* III · The Hands ────────────────────────────────────────────── */
 function hands() {
     const countEl = $('#handsCount');
-    const counter = { v: 0 };
-    gsap.to(counter, {
-        v: 65, duration: 2.2, ease: 'power3.out',
-        onUpdate: () => { countEl.textContent = Math.round(counter.v); },
-        scrollTrigger: { trigger: '.hands__intro', start: 'top 75%' },
-    });
+    if (countEl) {
+        const counter = { v: 0 };
+        gsap.to(counter, {
+            v: 63, duration: 2.2, ease: 'power3.out',
+            onUpdate: () => { countEl.textContent = Math.round(counter.v); },
+            scrollTrigger: { trigger: '.hands__intro', start: 'top 75%' },
+        });
+    }
     gsap.from('.hands__lead', { y: 40, opacity: 0, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: '.hands__intro', start: 'top 70%' } });
 
     gsap.fromTo('.hands__portrait-crop img', { yPercent: -12 }, {
