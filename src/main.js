@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSoundToggle();
     initEnquiryForm();
     initScrollTop();
+    initWhatsAppModal();
     initYear();
 
     if (reduceMotion) {
@@ -450,8 +451,8 @@ function ledger() {
 /* V · The Exchange ───────────────────────────────────────────── */
 function exchange() {
     $$('.record__item').forEach((item, i) => {
-        gsap.fromTo(item, { y: 60 + i * 30 }, {
-            y: -40 - i * 20, ease: 'none',
+        gsap.fromTo(item, { y: 40 + (i % 3) * 20 }, {
+            y: -25 - (i % 3) * 15, ease: 'none',
             scrollTrigger: { trigger: '#record', start: 'top bottom', end: 'bottom top', scrub: true },
         });
     });
@@ -887,6 +888,101 @@ function initEnquiryForm() {
         $('.enquiry__label', form).textContent = 'Letter drafted in your mail app';
         $('#dossierNote').textContent = `If nothing opened, write to ${recipient} directly.`;
     });
+}
+
+/* WhatsApp Dual Modal & Webhook Ping ──────────────────────────── */
+function initWhatsAppModal() {
+    const modal = $('#waModal');
+    const trigger = $('#waToggleBtn');
+    const closeBtn = $('#waModalClose');
+    const backdrop = $('#waModalBackdrop');
+    const footerTrigger = $('#footerWaTrigger');
+    const indexTrigger = $('#indexWhatsAppTrigger');
+    const pingBtn = $('#waPingBothBtn');
+    const msgInput = $('#waMsgInput');
+    const pingStatus = $('#waPingStatus');
+    const studioLink = $('#waStudioLink');
+    const kanikaLink = $('#waKanikaLink');
+    const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbz0q_RtAstHof_ho-TrxwaKdKkzSsQV9C0FP36H9W_KrF6aSPpeoB-QoyczGuPyEmKv/exec';
+
+    if (!modal || !trigger) return;
+
+    const openModal = () => {
+        modal.removeAttribute('hidden');
+        trigger.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+        if (msgInput) msgInput.focus();
+    };
+
+    const closeModal = () => {
+        modal.setAttribute('hidden', '');
+        trigger.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+    };
+
+    trigger.addEventListener('click', () => {
+        if (modal.hasAttribute('hidden')) openModal();
+        else closeModal();
+    });
+
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (backdrop) backdrop.addEventListener('click', closeModal);
+    if (footerTrigger) footerTrigger.addEventListener('click', openModal);
+    if (indexTrigger) {
+        indexTrigger.addEventListener('click', () => {
+            const indexToggle = $('#indexToggle');
+            if (indexToggle && indexToggle.getAttribute('aria-expanded') === 'true') {
+                indexToggle.click();
+            }
+            openModal();
+        });
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.hasAttribute('hidden')) closeModal();
+    });
+
+    const updateIndividualLinks = () => {
+        const text = encodeURIComponent(msgInput && msgInput.value.trim() ? msgInput.value.trim() : 'Hello Divulge Living, I would like to connect.');
+        if (studioLink) studioLink.href = `https://wa.me/918584922331?text=${text}`;
+        if (kanikaLink) kanikaLink.href = `https://wa.me/919123956594?text=${text}`;
+    };
+    if (msgInput) msgInput.addEventListener('input', updateIndividualLinks);
+
+    if (pingBtn) {
+        pingBtn.addEventListener('click', () => {
+            const userMsg = msgInput && msgInput.value.trim() ? msgInput.value.trim() : 'Hello Divulge Living, I would like to enquire about your handcrafted crochet bags and custom orders.';
+            const encoded = encodeURIComponent(userMsg);
+
+            // Log ping to Google Sheet webhook
+            try {
+                fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        timestamp: new Date().toISOString(),
+                        action: 'whatsapp_ping_both',
+                        message: userMsg
+                    })
+                }).catch(() => {});
+            } catch (_) {}
+
+            // Open Studio WhatsApp directly
+            window.open(`https://wa.me/918584922331?text=${encoded}`, '_blank');
+
+            // Trigger Kanika WhatsApp or provide immediate 1-click fallback
+            setTimeout(() => {
+                try {
+                    window.open(`https://wa.me/919123956594?text=${encoded}`, '_blank');
+                } catch (_) {}
+            }, 350);
+
+            if (pingStatus) {
+                pingStatus.innerHTML = `✓ Studio chat launched. <a href="https://wa.me/919123956594?text=${encoded}" target="_blank" rel="noopener noreferrer" style="color: #25D366; text-decoration: underline; font-weight: 600;">Also open Kanika Bose (+91 91239 56594)</a>`;
+            }
+        });
+    }
 }
 
 /* ═══════════════════════════════════════════════════════════════
