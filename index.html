@@ -286,44 +286,92 @@
         </div>
     </header>
 
-    <!-- Full-screen chapter index -->
-    <nav class="index-panel" id="indexPanel" aria-label="Chapter index" hidden>
-        <div class="index-panel__pillars">
-            <div class="index-panel__pillar">
-                <p class="index-panel__pillar-title mono">01 · Living Archive &amp; Leadership</p>
-                <ol class="index-panel__list">
-                    <li><a href="#prologue"><span>I</span>The Living Archive<small>Every weave has a story — Golden Strand heritage</small></a></li>
-                    <li><a href="#nest"><span>II</span>The Animal Soul<small>The Baya Weaver poem &amp; biomimicry</small></a></li>
-                    <li><a href="#founders"><span>III</span>The Founders<small>Nilay Guha Roy, Kanika Bose &amp; Dr. Abhipriya Chatterjee</small></a></li>
-                    <li><a href="#patron-highlight"><span>IV</span>Patron &amp; Mentor<small>Padma Bhushan Rajiv Sethi</small></a></li>
-                    <li><a href="#impact"><span>V</span>Global Patrons<small>275,000+ creations carried worldwide</small></a></li>
-                </ol>
-            </div>
-            <div class="index-panel__pillar">
-                <p class="index-panel__pillar-title mono">02 · Export Products &amp; OEM</p>
-                <ol class="index-panel__list">
-                    <li><a href="#deck"><span>I</span>Handcrafted Crochet Bags<small>Slouch totes, shoppers &amp; open-lattice pouches</small></a></li>
-                    <li><a href="#deck"><span>II</span>Custom &amp; Two-Tone Lines<small>Private-label indigo &amp; signature totes</small></a></li>
-                    <li><a href="#deck"><span>III</span>Braided Home Décor &amp; Rugs<small>Hand-braided mandala carpets &amp; lifestyle pieces</small></a></li>
-                    <li><a href="#export"><span>IV</span>Global Export &amp; B2B Suite<small>Manufacturer-direct wholesale, OEM &amp; sampling</small></a></li>
-                </ol>
-            </div>
-            <div class="index-panel__pillar">
-                <p class="index-panel__pillar-title mono">03 · Craftsmanship &amp; Exchange</p>
-                <ol class="index-panel__list">
-                    <li><a href="#hands"><span>I</span>63++ Master Artisans<small>Women custodians of Howrah &amp; Hooghly · Still Growing</small></a></li>
-                    <li><a href="#film"><span>II</span>The Rhythm of Craft<small>Artisan braiding &amp; knotting documentary</small></a></li>
-                    <li><a href="#strand"><span>III</span>The Strand<small>From alluvial silt to golden fibre</small></a></li>
-                    <li><a href="#return"><span>IV</span>Zero Waste &amp; Soil Return<small>Amata prebiotic tea &amp; 45-day cycle</small></a></li>
-                    <li><a href="#exchange"><span>V</span>Exhibitions, FAQ &amp; Brochure<small>Berlin Expo, NJB Pavilion &amp; export enquiry</small></a></li>
-                </ol>
-            </div>
+    <!-- Compact sidebar navigation (expands from Menu button) -->
+    <div class="index-backdrop" id="indexBackdrop" hidden></div>
+    <aside class="index-panel" id="indexPanel" aria-label="Navigation menu" aria-modal="true" role="dialog" hidden>
+        <div class="index-panel__head">
+            <span class="index-panel__kicker mono">Explore · Navigation</span>
+            <button type="button" class="index-panel__close mono" id="indexCloseBtn" aria-label="Close menu">
+                <span>Close</span>
+                <span class="index-panel__x" aria-hidden="true">×</span>
+            </button>
         </div>
+
+        <ol class="index-panel__list">
+            <li>
+                <a href="#prologue">
+                    <span class="index-panel__num mono">01</span>
+                    <span class="index-panel__copy">
+                        <strong>Prologue &amp; Ethos</strong>
+                        <small>Every weave has a story — Golden Strand heritage</small>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="#strand">
+                    <span class="index-panel__num mono">02</span>
+                    <span class="index-panel__copy">
+                        <strong>I · The Strand</strong>
+                        <small>From Ganges silt to hand-crocheted golden jute</small>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="#nest">
+                    <span class="index-panel__num mono">03</span>
+                    <span class="index-panel__copy">
+                        <strong>II · The Nest &amp; Poem</strong>
+                        <small>Baya weaver biomimicry &amp; trilingual verse</small>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="#deck">
+                    <span class="index-panel__num mono">04</span>
+                    <span class="index-panel__copy">
+                        <strong>III · Export Products</strong>
+                        <small>Handcrafted crochet bags, custom OEM &amp; floor rugs</small>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="#export">
+                    <span class="index-panel__num mono">05</span>
+                    <span class="index-panel__copy">
+                        <strong>B2B Export &amp; Sampling</strong>
+                        <small>MOQ 100+, private-label specs &amp; 45-day return</small>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="#exchange">
+                    <span class="index-panel__num mono">06</span>
+                    <span class="index-panel__copy">
+                        <strong>V · Expos, FAQ &amp; Brochure</strong>
+                        <small>Messe Berlin, NJB Pavilion &amp; trade inquiry</small>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="#founders">
+                    <span class="index-panel__num mono">07</span>
+                    <span class="index-panel__copy">
+                        <strong>Artisans &amp; Founders</strong>
+                        <small>63++ women custodians · Howrah, Hooghly &amp; Amata</small>
+                    </span>
+                </a>
+            </li>
+        </ol>
+
         <div class="index-panel__foot">
-            <p>Amraberia, Howrah &amp; Hooghly · Kolkata, West Bengal · <a href="#" class="obf-email" data-obf-email="aW5mb0BkaXZ1bGdlLWxpdmluZy5jb20=" aria-label="Email Divulge Living"><span>info@divulge-living.com</span></a></p>
-            <p><a href="https://www.instagram.com/divulge_living/?hl=en" target="_blank" rel="noopener noreferrer">Instagram: @divulge_living</a> · <button type="button" class="btn-text-link" id="indexWhatsAppTrigger">WhatsApp: Direct Lines &amp; Broadcast</button></p>
+            <a href="#inquiryForm" class="index-panel__cta mono">Request Quote &amp; Brochure →</a>
+            <div class="index-panel__links mono">
+                <a href="#" class="obf-email" data-obf-email="aW5mb0BkaXZ1bGdlLWxpdmluZy5jb20=" aria-label="Email Divulge Living">info@divulge-living.com</a>
+                <button type="button" class="btn-text-link" id="indexWhatsAppTrigger">WhatsApp Desk</button>
+                <a href="https://www.instagram.com/divulge_living/?hl=en" target="_blank" rel="noopener noreferrer">@divulge_living</a>
+            </div>
         </div>
-    </nav>
+    </aside>
 
 
     <main id="top">
@@ -333,7 +381,6 @@
         <div class="hero__pin">
             <div class="hero__meta mono">
                 <span>Nº 01 — Global Jute Craft &amp; Export House</span>
-                <span>Howrah &amp; Hooghly · <i>Corchorus olitorius</i> L.</span>
             </div>
 
             <h1 class="hero__title" id="heroTitle">

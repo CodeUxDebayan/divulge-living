@@ -507,10 +507,36 @@ function founders() {
 
 function colophon() {
     const split = SplitText.create('#colophonWord', { type: 'chars' });
-    gsap.from(split.chars, {
-        yPercent: 40, opacity: 0, stagger: 0.05, duration: 1.4, ease: 'expo.out',
-        scrollTrigger: { trigger: '.colophon', start: 'top 60%' },
+
+    const tl = gsap.timeline({
+        scrollTrigger: {
+            trigger: '.colophon',
+            start: 'top 86%',
+            toggleActions: 'play none none reverse',
+        },
     });
+
+    tl.from('.colophon__logo-mark', {
+        scale: 0.85, y: 24, opacity: 0, duration: 0.8, ease: 'expo.out',
+    }, 0)
+    .from('.colophon__cols > div', {
+        y: 36, opacity: 0, stagger: 0.12, duration: 1, ease: 'expo.out',
+    }, 0.08)
+    .from(split.chars, {
+        yPercent: 55, opacity: 0, stagger: 0.045, duration: 1.25, ease: 'expo.out',
+    }, 0.15)
+    .from('.colophon__legal', {
+        y: 16, opacity: 0, duration: 0.8, ease: 'power2.out',
+    }, 0.45);
+
+    gsap.fromTo('#colophonWord',
+        { yPercent: 18 },
+        {
+            yPercent: 0,
+            ease: 'none',
+            scrollTrigger: { trigger: '.colophon', start: 'top bottom', end: 'bottom bottom', scrub: 0.6 },
+        }
+    );
 }
 
 /* Chapter titles: letters settle into place — no masks, so no clipped descenders */
@@ -537,7 +563,7 @@ function initBackdrop() {
     });
 }
 
-/* Navigation: rolling chapter counter, light/dark, hides while reading ─ */
+/* Navigation: rolling chapter counter & light/dark adaptation (persistent header) ─ */
 function initNav() {
     const nav = $('#nav');
     const num = $('#navNum');
@@ -571,14 +597,6 @@ function initNav() {
     ScrollTrigger.create({
         trigger: '.hero', start: 'top top', end: 'bottom top',
         onToggle: (self) => { if (self.isActive) nav.classList.remove('nav--on-dark'); },
-    });
-
-    ScrollTrigger.create({
-        start: 0, end: 'max',
-        onUpdate: (self) => {
-            const reading = self.direction === 1 && self.scroll() > window.innerHeight * 0.6;
-            nav.classList.toggle('nav--hidden', reading && !document.body.classList.contains('index-open'));
-        },
     });
 }
 
@@ -663,39 +681,88 @@ let closeIndexPanel = () => {};
 function initIndexPanel() {
     const btn = $('#indexToggle');
     const panel = $('#indexPanel');
+    const backdrop = $('#indexBackdrop');
+    const closeBtn = $('#indexCloseBtn');
     const animate = !reduceMotion;
 
+    if (!btn || !panel) return;
+
+    const getOriginFromMenuBtn = () => {
+        const br = btn.getBoundingClientRect();
+        const pr = panel.getBoundingClientRect();
+        const ox = Math.round(br.left + br.width / 2 - pr.left);
+        const oy = Math.round(br.top + br.height / 2 - pr.top);
+        const scaleX = Math.max(0.14, Math.min(0.45, br.width / Math.max(1, pr.width)));
+        const scaleY = Math.max(0.05, Math.min(0.2, br.height / Math.max(1, pr.height)));
+        return { origin: `${ox}px ${oy}px`, scaleX, scaleY };
+    };
+
     function open() {
+        gsap.killTweensOf([panel, backdrop, '.index-panel__list li', '.index-panel__foot']);
         panel.hidden = false;
+        if (backdrop) backdrop.hidden = false;
+        gsap.set(panel, { clearProps: 'transform,borderRadius,opacity' });
         document.body.classList.add('index-open');
         btn.setAttribute('aria-expanded', 'true');
-        $('#nav').classList.add('nav--on-dark');
         lenis && lenis.stop();
+
         if (animate) {
-            gsap.fromTo(panel, { clipPath: 'inset(0% 0% 100% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.9, ease: 'expo.inOut' });
-            gsap.from('.index-panel__list a', { yPercent: 100, opacity: 0, stagger: 0.06, duration: 0.9, ease: 'expo.out', delay: 0.35 });
+            const { origin, scaleX, scaleY } = getOriginFromMenuBtn();
+            if (backdrop) gsap.fromTo(backdrop, { opacity: 0 }, { opacity: 1, duration: 0.35, ease: 'power2.out' });
+            gsap.fromTo(panel,
+                { transformOrigin: origin, scaleX, scaleY, borderRadius: '999px', opacity: 0.2 },
+                { scaleX: 1, scaleY: 1, borderRadius: '14px', opacity: 1, duration: 0.56, ease: 'expo.out' }
+            );
+            gsap.fromTo('.index-panel__list li, .index-panel__foot',
+                { y: 12, opacity: 0 },
+                { y: 0, opacity: 1, stagger: 0.03, duration: 0.42, ease: 'expo.out', delay: 0.14, clearProps: 'transform,opacity' }
+            );
         }
-        $('a', panel).focus({ preventScroll: true });
+
+        const firstFocus = closeBtn || $('a', panel);
+        if (firstFocus) firstFocus.focus({ preventScroll: true });
     }
 
-    function close() {
+    function close(restoreFocus = false) {
         if (panel.hidden) return;
+        gsap.killTweensOf([panel, backdrop, '.index-panel__list li', '.index-panel__foot']);
         document.body.classList.remove('index-open');
         btn.setAttribute('aria-expanded', 'false');
         lenis && lenis.start();
+
         if (animate) {
-            gsap.to(panel, { clipPath: 'inset(0% 0% 100% 0%)', duration: 0.7, ease: 'expo.inOut', onComplete: () => { panel.hidden = true; ScrollTrigger.update(); } });
+            const { origin, scaleX, scaleY } = getOriginFromMenuBtn();
+            if (backdrop) gsap.to(backdrop, { opacity: 0, duration: 0.32, ease: 'power2.in' });
+            gsap.to(panel, {
+                transformOrigin: origin,
+                scaleX,
+                scaleY,
+                borderRadius: '999px',
+                opacity: 0,
+                duration: 0.4,
+                ease: 'expo.inOut',
+                onComplete: () => {
+                    panel.hidden = true;
+                    if (backdrop) backdrop.hidden = true;
+                    gsap.set(panel, { clearProps: 'all' });
+                    ScrollTrigger.update();
+                },
+            });
         } else {
             panel.hidden = true;
+            if (backdrop) backdrop.hidden = true;
         }
+        if (restoreFocus) btn.focus({ preventScroll: true });
     }
 
-    closeIndexPanel = close;
-    btn.addEventListener('click', () => (panel.hidden ? open() : close()));
+    closeIndexPanel = () => close(false);
+    btn.addEventListener('click', () => (panel.hidden ? open() : close(false)));
+    if (closeBtn) closeBtn.addEventListener('click', () => close(true));
+    if (backdrop) backdrop.addEventListener('click', () => close(false));
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !panel.hidden) { close(); btn.focus(); }
+        if (e.key === 'Escape' && !panel.hidden) close(true);
     });
-    if (!animate) $$('a', panel).forEach((a) => a.addEventListener('click', close));
+    if (!animate) $$('a', panel).forEach((a) => a.addEventListener('click', () => close(false)));
 }
 
 /* Soil console: day → stage text, meters and the --p that drives the SVG ─ */
