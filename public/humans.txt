@@ -7,5 +7,5 @@ Location: Kolkata, West Bengal, India
 /* SITE */
 Standards: HTML5, CSS3, ESNext
 Tools: GSAP, Lenis, Vite
-Client: Divulge Living (Howrah & Kolkata, West Bengal)
+Client: Divulge Living (Howrah, Hooghly & Kolkata, West Bengal)
 Date: 2026

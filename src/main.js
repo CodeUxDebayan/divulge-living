@@ -15,6 +15,17 @@ gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin);
 const $ = (s, root = document) => root.querySelector(s);
 const $$ = (s, root = document) => [...root.querySelectorAll(s)];
 
+/**
+ * Lead Capture (Google Sheets via Apps Script) & Export Brochure Configuration.
+ * Populate `appsScriptUrl` and `brochureUrl` once the Web App URL and PDF file are added.
+ */
+const LEAD_CAPTURE_CONFIG = {
+    appsScriptUrl: '', // e.g. 'https://script.google.com/macros/s/YOUR_DEPLOY_ID/exec'
+    brochureUrl: '',   // e.g. '/divulge-living-brochure.pdf'
+    brochureFilename: 'Divulge-Living-Export-Brochure.pdf',
+    fallbackEmail: 'info@divulge-living.com',
+};
+
 // Review mode: motion always plays. Before launch set RESPECT_REDUCED_MOTION = true
 // (and the matching flag in index.html) so visitors who ask for less motion get the static page.
 const RESPECT_REDUCED_MOTION = false;
@@ -24,6 +35,9 @@ const isNarrow = () => window.innerWidth <= 720;
 
 let lenis = null;
 let filmPausedByVisitor = false;
+let showMusicPrompt = () => {};
+let hideMusicPrompt = () => {};
+let openWhatsAppWithText = () => {};
 const sound = createSound();
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -39,7 +53,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initEmailObfuscation();
     initIndexPanel();
     initFilmToggle();
+    initMusicPrompt();
     initSoundToggle();
+    initCatalogInteractions();
     initEnquiryForm();
     initScrollTop();
     initWhatsAppModal();
@@ -47,7 +63,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (reduceMotion) {
         document.documentElement.classList.remove('motion');
-        document.fonts.ready.then(() => initStatic(bio));
+        document.fonts.ready.then(() => {
+            initStatic(bio);
+            showMusicPrompt();
+        });
         return;
     }
     document.fonts.ready.then(() => initMotion(bio));
@@ -103,7 +122,12 @@ function playIntro(onReveal) {
     const tl = gsap.timeline({
         paused: true,
         defaults: { ease: 'expo.out' },
-        onComplete: () => { intro.remove(); lenis.start(); ScrollTrigger.refresh(); },
+        onComplete: () => {
+            intro.remove();
+            lenis.start();
+            ScrollTrigger.refresh();
+            showMusicPrompt();
+        },
     })
         .from('.intro__slate span', { opacity: 0, y: 10, stagger: 0.1, duration: 0.8 }, 0)
         .to(progress, {
@@ -141,7 +165,7 @@ function prologue() {
     const geo = isNarrow()
         ? {
             closed: 'inset(92% 5% 4% 5% round 240px 240px 0px 0px)',
-            arch: 'inset(56% 5% 4% 5% round 240px 240px 12px 12px)',
+            arch: 'inset(60% 5% 4% 5% round 240px 240px 12px 12px)',
             full: 'inset(0% 0% 0% 0% round 0px 0px 0px 0px)',
         }
         : {
@@ -156,6 +180,7 @@ function prologue() {
     const entrance = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } })
         .from('.hero__meta span', { y: 14, opacity: 0, duration: 1, stagger: 0.08 }, 0.1)
         .from(lines, { yPercent: 110, duration: 1.4, stagger: 0.12 }, 0.2)
+        .from('.hero__slogan-lockup', { y: 24, opacity: 0, duration: 1.1 }, 0.52)
         .fromTo(media, { clipPath: geo.closed }, { clipPath: geo.arch, duration: 1.8, ease: 'expo.inOut' }, 0.1)
         .from(img, { scale: 1.35, duration: 2.2 }, 0.1)
         .from('.hero__watermark', { opacity: 0, scale: 0.95, duration: 1.8, ease: 'power2.out' }, 0.3)
@@ -165,7 +190,7 @@ function prologue() {
     gsap.timeline({
         scrollTrigger: { trigger: '.hero', start: 'top top', end: '+=120%', pin: '.hero__pin', scrub: 1 },
     })
-        .to(['.hero__title', '.hero__meta'], { yPercent: -35, opacity: 0, ease: 'power2.in', duration: 0.45 }, 0)
+        .to(['.hero__title', '.hero__meta', '.hero__slogan-lockup'], { yPercent: -35, opacity: 0, pointerEvents: 'none', ease: 'power2.in', duration: 0.45 }, 0)
         .to('.hero__watermark', { opacity: 0, yPercent: -20, duration: 0.35, ease: 'power1.in' }, 0)
         .fromTo(media, { clipPath: geo.arch }, { clipPath: geo.full, ease: 'power2.inOut', duration: 0.8 }, 0.08)
         .to(img, { scale: 1, ease: 'none', duration: 1 }, 0)
@@ -303,38 +328,33 @@ function nest() {
     const build = (tl) => {
         if (mascot) {
             tl.fromTo(mascot,
-                { opacity: 0, y: 50, scale: 0.94 },
-                { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'power2.out' },
+                { opacity: 0, y: 40, scale: 0.94 },
+                { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: 'power2.out' },
                 0
-            )
-            .to(mascot, {
-                opacity: 0, y: -40, scale: 0.97, duration: 0.45, ease: 'power2.in'
-            }, 1.25);
+            );
         }
         if (caption) {
             tl.fromTo(caption,
-                { opacity: 0, y: 20 },
-                { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
-                0.2
-            )
-            .to(caption, {
-                opacity: 0, y: -20, duration: 0.4, ease: 'power2.in'
-            }, 1.3);
+                { opacity: 0, y: 18 },
+                { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' },
+                0.15
+            );
         }
         tl
-            .fromTo('.poem__bn span', { opacity: 0.12 }, { opacity: 1, stagger: 0.12, duration: 0.2 }, 0.1)
-            .from('.poem__en span', { opacity: 0, y: 20, stagger: 0.25, duration: 0.3 }, 0.85)
-            .from('.poem cite', { opacity: 0, duration: 0.2 }, 1.2);
+            .fromTo('.poem__head', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.35 }, 0.2)
+            .fromTo('.poem__row', { opacity: 0.14, y: 14 }, { opacity: 1, y: 0, stagger: 0.1, duration: 0.35 }, 0.28)
+            .from('.poem cite', { opacity: 0, duration: 0.25 }, 1.1)
+            .to({}, { duration: 0.25 });
 
         return tl;
     };
 
     const mm = gsap.matchMedia();
-    mm.add('(min-width: 861px)', () => build(gsap.timeline({
-        scrollTrigger: { trigger: '#nest', start: 'top top', end: '+=170%', pin: '.nest__pin', scrub: 1 },
+    mm.add('(min-width: 1025px)', () => build(gsap.timeline({
+        scrollTrigger: { trigger: '#nest', start: 'top top', end: '+=135%', pin: '.nest__pin', scrub: 1 },
     })));
-    mm.add('(max-width: 860px)', () => build(gsap.timeline({
-        scrollTrigger: { trigger: '.nest__pin', start: 'top 70%', end: 'bottom 70%', scrub: 1 },
+    mm.add('(max-width: 1024px)', () => build(gsap.timeline({
+        scrollTrigger: { trigger: '.nest__pin', start: 'top 75%', end: 'bottom 70%', scrub: 1 },
     })));
 
     gsap.from('.laws li', {
@@ -413,9 +433,17 @@ function hands() {
 
     const cards = $$('.card');
     gsap.from(cards, {
-        y: 40, opacity: 0, stagger: 0.12, duration: 0.9, ease: 'expo.out',
-        scrollTrigger: { trigger: '#deck', start: 'top 80%' },
+        y: 40, opacity: 0, stagger: 0.08, duration: 0.85, ease: 'expo.out',
+        scrollTrigger: { trigger: '#deck', start: 'top 82%' },
     });
+
+    const exportSuite = $('#export');
+    if (exportSuite) {
+        gsap.from(exportSuite, {
+            y: 36, opacity: 0, duration: 1, ease: 'expo.out',
+            scrollTrigger: { trigger: exportSuite, start: 'top 88%' },
+        });
+    }
 }
 
 /* IV · The Return: scrolling is the passing of days ─────────── */
@@ -579,6 +607,7 @@ function initAnchors() {
     $$('a[href^="#"]').forEach((a) => {
         a.addEventListener('click', (e) => {
             const id = a.getAttribute('href');
+            if (!id || id === '#') return;
             const target = id === '#top' ? 0 : $(id);
             if (target === null) return;
             e.preventDefault();
@@ -790,33 +819,119 @@ function createSound() {
     };
 }
 
+function initMusicPrompt() {
+    const prompt = $('#musicPrompt');
+    const enableBtn = $('#musicEnableBtn');
+    const dismissBtn = $('#musicDismissBtn');
+    if (!prompt) return;
+
+    let resolved = false;
+
+    showMusicPrompt = () => {
+        if (resolved || sound.isEnabled()) return;
+        prompt.hidden = false;
+    };
+
+    hideMusicPrompt = () => {
+        resolved = true;
+        prompt.hidden = true;
+    };
+
+    if (enableBtn) {
+        enableBtn.addEventListener('click', () => {
+            sound.setEnabled(true);
+            hideMusicPrompt();
+        });
+    }
+
+    if (dismissBtn) {
+        dismissBtn.addEventListener('click', () => {
+            sound.setEnabled(false);
+            hideMusicPrompt();
+        });
+    }
+}
+
 function initSoundToggle() {
     const btn = $('#soundToggle');
     if (!btn || !sound.available) { if (btn) btn.hidden = true; return; }
 
-    let userHasToggled = false;
-
     btn.addEventListener('click', () => {
-        userHasToggled = true;
         const willEnable = btn.getAttribute('aria-pressed') !== 'true';
         sound.setEnabled(willEnable);
+        hideMusicPrompt();
     });
+}
 
-    // Attempt autoplay immediately
-    sound.setEnabled(true);
+function initCatalogInteractions() {
+    const filterButtons = $$('.deck__filter');
+    const cards = $$('.card');
 
-    // Fallback: unlock on first interaction if blocked by browser policy
-    const unlockOnGesture = () => {
-        if (!userHasToggled && !sound.isEnabled()) {
-            sound.setEnabled(true);
-        }
-        window.removeEventListener('pointerdown', unlockOnGesture);
-        window.removeEventListener('scroll', unlockOnGesture);
-        window.removeEventListener('keydown', unlockOnGesture);
-    };
-    window.addEventListener('pointerdown', unlockOnGesture, { once: true, passive: true });
-    window.addEventListener('scroll', unlockOnGesture, { once: true, passive: true });
-    window.addEventListener('keydown', unlockOnGesture, { once: true, passive: true });
+    if (filterButtons.length && cards.length) {
+        filterButtons.forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const filter = btn.dataset.filter || 'all';
+                filterButtons.forEach((b) => {
+                    const active = b === btn;
+                    b.classList.toggle('is-active', active);
+                    b.setAttribute('aria-selected', String(active));
+                });
+
+                const shown = [];
+                cards.forEach((card) => {
+                    const matches = filter === 'all' || card.dataset.category === filter;
+                    card.classList.toggle('is-hidden', !matches);
+                    if (matches) shown.push(card);
+                });
+
+                if (!reduceMotion && shown.length) {
+                    gsap.fromTo(shown, { y: 18, opacity: 0.4 }, { y: 0, opacity: 1, duration: 0.45, stagger: 0.04, ease: 'power2.out', overwrite: 'auto' });
+                }
+                ScrollTrigger.refresh();
+            });
+        });
+    }
+
+    const enquiryButtons = $$('[data-enquire-product]');
+    const form = $('#inquiryForm');
+    const unlockPanel = $('#brochureUnlockPanel');
+    const msgBox = $('#inqMessage');
+    const engagementSelect = $('#inqType');
+    const nameInput = $('#inqName');
+
+    enquiryButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const product = btn.dataset.enquireProduct;
+            if (!form) return;
+
+            if (unlockPanel && !unlockPanel.hidden) {
+                unlockPanel.hidden = true;
+                form.hidden = false;
+            }
+
+            if (engagementSelect) {
+                if (/rug|mat|décor|decor/i.test(product)) {
+                    engagementSelect.value = 'Home Décor & Braided Mandala Rugs';
+                } else if (/two-tone|custom|indigo|series/i.test(product)) {
+                    engagementSelect.value = 'Custom OEM / Private Label Jute Bags';
+                } else {
+                    engagementSelect.value = 'Wholesale / Bulk Export Quote & Brochure';
+                }
+            }
+
+            if (msgBox) {
+                msgBox.value = `Requesting wholesale pricing, MOQ & sample dispatch details for: ${product}.\nEstimated quantity: `;
+            }
+
+            if (lenis) lenis.scrollTo('#inquiryForm', { duration: 1.4 });
+            else form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            setTimeout(() => {
+                if (nameInput && !nameInput.value.trim()) nameInput.focus({ preventScroll: true });
+                else if (msgBox) msgBox.focus({ preventScroll: true });
+            }, 600);
+        });
+    });
 }
 
 function initScrollTop() {
@@ -867,27 +982,151 @@ function initEmailObfuscation() {
     }
 }
 
-/* Enquiry: no backend yet, so compose the letter in the visitor's mail app ─ */
+/* Enquiry: Google Sheet Apps Script lead capture + Brochure download ─ */
 function initEnquiryForm() {
     const form = $('#inquiryForm');
     if (!form) return;
-    const recipient = decodeEmail(form.dataset.recipientB64);
-    form.addEventListener('submit', (e) => {
+
+    const unlockPanel = $('#brochureUnlockPanel');
+    const unlockMsg = $('#brochureUnlockMsg');
+    const unlockActions = $('#brochureUnlockActions');
+    const resetBtn = $('#brochureResetBtn');
+    const submitBtn = $('.enquiry__send', form);
+    const submitLabel = $('.enquiry__label', form);
+    const dossierNote = $('#dossierNote');
+    const recipient = decodeEmail(form.dataset.recipientB64) || LEAD_CAPTURE_CONFIG.fallbackEmail;
+
+    const createActionLink = (label, href, extraClass = '', downloadName = '') => {
+        const a = document.createElement('a');
+        a.className = `brochure-unlock__cta ${extraClass}`.trim();
+        a.href = href;
+        a.textContent = label;
+        if (downloadName) {
+            a.setAttribute('download', downloadName);
+        } else if (!href.startsWith('mailto:')) {
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+        }
+        return a;
+    };
+
+    const triggerDownload = (url, filename) => {
+        const a = document.createElement('a');
+        a.href = url;
+        a.setAttribute('download', filename || 'Divulge-Living-Brochure.pdf');
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+    };
+
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const d = new FormData(form);
-        const subject = `Curatorial enquiry — ${d.get('institution')}`;
-        const body = [
-            `Name: ${d.get('name')}`,
-            `Institution: ${d.get('institution')}`,
-            `Email: ${d.get('email')}`,
-            `Engagement: ${d.get('engagement')}`,
+        const payload = {
+            action: 'lead_inquiry',
+            timestamp: new Date().toISOString(),
+            name: String(d.get('name') || '').trim(),
+            company: String(d.get('institution') || '').trim(),
+            email: String(d.get('email') || '').trim(),
+            phone: String(d.get('phone') || '').trim(),
+            country: String(d.get('country') || '').trim(),
+            engagement: String(d.get('engagement') || '').trim(),
+            message: String(d.get('message') || '').trim(),
+            sourceUrl: window.location.href,
+            brochureRequested: true,
+        };
+
+        if (submitBtn) submitBtn.disabled = true;
+        if (submitLabel) submitLabel.textContent = 'Submitting Inquiry…';
+
+        try {
+            localStorage.setItem('divulge_last_inquiry', JSON.stringify(payload));
+        } catch {}
+
+        let recordedInSheet = false;
+        if (LEAD_CAPTURE_CONFIG.appsScriptUrl) {
+            try {
+                await fetch(LEAD_CAPTURE_CONFIG.appsScriptUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload),
+                });
+                recordedInSheet = true;
+            } catch {}
+        }
+
+        const subject = `Export / Wholesale Inquiry — ${payload.company || payload.name}`;
+        const mailBody = [
+            `Name: ${payload.name}`,
+            `Company / Brand: ${payload.company}`,
+            `Email: ${payload.email}`,
+            `Phone / WhatsApp: ${payload.phone || '—'}`,
+            `Country / Port: ${payload.country || '—'}`,
+            `Inquiry Type: ${payload.engagement}`,
             '',
-            d.get('message') || '',
+            payload.message || '',
         ].join('\n');
-        window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        $('.enquiry__label', form).textContent = 'Letter drafted in your mail app';
-        $('#dossierNote').textContent = `If nothing opened, write to ${recipient} directly.`;
+        const mailtoHref = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(mailBody)}`;
+        const waSummary = `Hello Divulge Living, I just submitted an inquiry.\nName: ${payload.name}\nCompany: ${payload.company}\nCountry: ${payload.country || '—'}\nInterest: ${payload.engagement}\n${payload.message ? `Brief: ${payload.message}` : ''}`;
+
+        if (unlockActions) {
+            unlockActions.replaceChildren();
+            if (LEAD_CAPTURE_CONFIG.brochureUrl) {
+                unlockActions.appendChild(
+                    createActionLink('Download Brochure (PDF) ↓', LEAD_CAPTURE_CONFIG.brochureUrl, '', LEAD_CAPTURE_CONFIG.brochureFilename)
+                );
+                unlockActions.appendChild(
+                    createActionLink(`Email Copy to ${recipient}`, mailtoHref, 'brochure-unlock__cta--ghost')
+                );
+                triggerDownload(LEAD_CAPTURE_CONFIG.brochureUrl, LEAD_CAPTURE_CONFIG.brochureFilename);
+            } else {
+                unlockActions.appendChild(
+                    createActionLink(`Email Brief to ${recipient}`, mailtoHref)
+                );
+                const waBtn = document.createElement('button');
+                waBtn.type = 'button';
+                waBtn.className = 'brochure-unlock__cta brochure-unlock__cta--ghost';
+                waBtn.textContent = 'Send via WhatsApp & Request Brochure →';
+                waBtn.addEventListener('click', () => openWhatsAppWithText(waSummary));
+                unlockActions.appendChild(waBtn);
+            }
+        }
+
+        if (unlockMsg) {
+            if (LEAD_CAPTURE_CONFIG.brochureUrl && recordedInSheet) {
+                unlockMsg.textContent = `Thank you, ${payload.name}. Your inquiry has been recorded in our export log and your brochure PDF download should start automatically.`;
+            } else if (LEAD_CAPTURE_CONFIG.brochureUrl) {
+                unlockMsg.textContent = `Thank you, ${payload.name}. Your brochure PDF download has been unlocked below, and you can also dispatch a direct copy to ${recipient}.`;
+            } else if (recordedInSheet) {
+                unlockMsg.textContent = `Thank you, ${payload.name}. Your inquiry is logged in our Google Sheet. Send a copy via email or WhatsApp below for immediate catalog dispatch.`;
+            } else {
+                unlockMsg.textContent = `Thank you, ${payload.name}. Lead capture & brochure download are staged and ready — send your pre-filled brief directly via ${recipient} or WhatsApp below.`;
+            }
+        }
+
+        if (unlockPanel) {
+            form.hidden = true;
+            unlockPanel.hidden = false;
+            ScrollTrigger.refresh();
+        } else if (dossierNote) {
+            dossierNote.textContent = `Ready — email ${recipient} directly if your mail client did not open.`;
+            window.location.href = mailtoHref;
+        }
+
+        if (submitBtn) submitBtn.disabled = false;
+        if (submitLabel) submitLabel.textContent = 'Submit Inquiry & Unlock Brochure';
     });
+
+    if (resetBtn && unlockPanel) {
+        resetBtn.addEventListener('click', () => {
+            unlockPanel.hidden = true;
+            form.hidden = false;
+            form.reset();
+            ScrollTrigger.refresh();
+        });
+    }
 }
 
 /* WhatsApp Dual Modal & Webhook Ping ──────────────────────────── */
@@ -897,6 +1136,8 @@ function initWhatsAppModal() {
     const closeBtn = $('#waModalClose');
     const backdrop = $('#waModalBackdrop');
     const footerTrigger = $('#footerWaTrigger');
+    const exportTrigger = $('#exportWaTrigger');
+    const contactDeskTrigger = $('#contactDeskWaTrigger');
     const indexTrigger = $('#indexWhatsAppTrigger');
     const pingBtn = $('#waPingBothBtn');
     const msgInput = $('#waMsgInput');
@@ -907,12 +1148,24 @@ function initWhatsAppModal() {
 
     if (!modal || !trigger) return;
 
-    const openModal = () => {
+    const updateIndividualLinks = () => {
+        const text = encodeURIComponent(msgInput && msgInput.value.trim() ? msgInput.value.trim() : 'Hello Divulge Living, I would like to connect.');
+        if (studioLink) studioLink.href = `https://wa.me/918584922331?text=${text}`;
+        if (kanikaLink) kanikaLink.href = `https://wa.me/919123956594?text=${text}`;
+    };
+
+    const openModal = (prefill = '') => {
+        if (prefill && msgInput) {
+            msgInput.value = prefill;
+            updateIndividualLinks();
+        }
         modal.removeAttribute('hidden');
         trigger.setAttribute('aria-expanded', 'true');
         document.body.style.overflow = 'hidden';
         if (msgInput) msgInput.focus();
     };
+
+    openWhatsAppWithText = (text) => openModal(text);
 
     const closeModal = () => {
         modal.setAttribute('hidden', '');
@@ -927,7 +1180,13 @@ function initWhatsAppModal() {
 
     if (closeBtn) closeBtn.addEventListener('click', closeModal);
     if (backdrop) backdrop.addEventListener('click', closeModal);
-    if (footerTrigger) footerTrigger.addEventListener('click', openModal);
+    if (footerTrigger) footerTrigger.addEventListener('click', () => openModal());
+    if (exportTrigger) {
+        exportTrigger.addEventListener('click', () => {
+            openModal('Hello Divulge Living, I would like an export / wholesale quote and brochure for your handcrafted jute collection.');
+        });
+    }
+    if (contactDeskTrigger) contactDeskTrigger.addEventListener('click', () => openModal());
     if (indexTrigger) {
         indexTrigger.addEventListener('click', () => {
             const indexToggle = $('#indexToggle');
@@ -942,11 +1201,6 @@ function initWhatsAppModal() {
         if (e.key === 'Escape' && !modal.hasAttribute('hidden')) closeModal();
     });
 
-    const updateIndividualLinks = () => {
-        const text = encodeURIComponent(msgInput && msgInput.value.trim() ? msgInput.value.trim() : 'Hello Divulge Living, I would like to connect.');
-        if (studioLink) studioLink.href = `https://wa.me/918584922331?text=${text}`;
-        if (kanikaLink) kanikaLink.href = `https://wa.me/919123956594?text=${text}`;
-    };
     if (msgInput) msgInput.addEventListener('input', updateIndividualLinks);
 
     if (pingBtn) {
