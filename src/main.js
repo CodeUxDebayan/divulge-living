@@ -104,7 +104,25 @@ function initMotion(bio) {
         initMagnetic();
     }
 
-    playIntro(() => entrance.play());
+    const params = new URLSearchParams(window.location.search);
+    const hasDeepTarget = Boolean(params.get('product') || window.location.hash === '#inquiryForm' || window.location.hash === '#deck' || window.location.hash === '#export' || window.location.hash === '#founders' || window.location.hash === '#exchange' || window.location.hash === '#hands');
+
+    if (hasDeepTarget) {
+        const intro = $('#intro');
+        if (intro) intro.remove();
+        entrance.progress(1);
+        ScrollTrigger.refresh();
+        showMusicPrompt();
+        const targetSel = params.get('product') ? '#inquiryForm' : window.location.hash;
+        const targetEl = targetSel ? $(targetSel) : null;
+        if (targetEl) {
+            requestAnimationFrame(() => {
+                lenis.scrollTo(targetEl, { immediate: false, duration: 1.1 });
+            });
+        }
+    } else {
+        playIntro(() => entrance.play());
+    }
     document.fonts && document.fonts.ready.then(() => ScrollTrigger.refresh());
 }
 
@@ -176,26 +194,45 @@ function prologue() {
 
     gsap.set(media, { clipPath: geo.arch });
     gsap.set(img, { scale: 1.15 });
+    gsap.set(['.hero__title', '.hero__meta', '.hero__slogan-lockup'], { opacity: 1, yPercent: 0 });
 
+    // Animate child elements for entrance so parent ScrollTrigger controls never inherit opacity: 0
     const entrance = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } })
-        .from('.hero__meta span', { y: 14, opacity: 0, duration: 1, stagger: 0.08 }, 0.1)
+        .from('.hero__meta span', { y: 14, opacity: 0, duration: 1, stagger: 0.08, clearProps: 'transform,opacity' }, 0.1)
         .from(lines, { yPercent: 110, duration: 1.4, stagger: 0.12 }, 0.2)
-        .from('.hero__slogan-lockup', { y: 24, opacity: 0, duration: 1.1 }, 0.52)
+        .from(['.hero__slogan-kicker', '.hero__slogan', '.hero__cta-row'], { y: 20, opacity: 0, duration: 1, stagger: 0.08, clearProps: 'transform,opacity' }, 0.45)
         .fromTo(media, { clipPath: geo.closed }, { clipPath: geo.arch, duration: 1.8, ease: 'expo.inOut' }, 0.1)
         .from(img, { scale: 1.35, duration: 2.2 }, 0.1)
-        .from('.hero__watermark', { opacity: 0, scale: 0.95, duration: 1.8, ease: 'power2.out' }, 0.3)
-        .from('.hero__strand', { opacity: 0, duration: 1.4 }, 1)
-        .from('.hero__hint, .hero__cue', { opacity: 0, duration: 1 }, 1.4);
+        .from('.hero__watermark img', { opacity: 0, scale: 0.95, duration: 1.8, ease: 'power2.out', clearProps: 'transform,opacity' }, 0.3)
+        .from('.hero__strand', { opacity: 0, duration: 1.4, clearProps: 'opacity' }, 1)
+        .from('.hero__hint, .hero__cue', { opacity: 0, duration: 1, clearProps: 'opacity' }, 1.4);
 
+    const sloganLockup = $('.hero__slogan-lockup');
     gsap.timeline({
-        scrollTrigger: { trigger: '.hero', start: 'top top', end: '+=120%', pin: '.hero__pin', scrub: 1 },
+        scrollTrigger: {
+            trigger: '.hero',
+            start: 'top top',
+            end: '+=120%',
+            pin: '.hero__pin',
+            scrub: 1,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+                if (sloganLockup) {
+                    sloganLockup.style.pointerEvents = self.progress > 0.28 ? 'none' : 'auto';
+                }
+            },
+        },
     })
-        .to(['.hero__title', '.hero__meta', '.hero__slogan-lockup'], { yPercent: -35, opacity: 0, pointerEvents: 'none', ease: 'power2.in', duration: 0.45 }, 0)
-        .to('.hero__watermark', { opacity: 0, yPercent: -20, duration: 0.35, ease: 'power1.in' }, 0)
+        .fromTo(['.hero__title', '.hero__meta', '.hero__slogan-lockup'],
+            { yPercent: 0, opacity: 1 },
+            { yPercent: -35, opacity: 0, ease: 'power2.in', duration: 0.45 }, 0)
+        .fromTo('.hero__watermark',
+            { yPercent: 0, opacity: 0.22 },
+            { opacity: 0, yPercent: -20, duration: 0.35, ease: 'power1.in' }, 0)
         .fromTo(media, { clipPath: geo.arch }, { clipPath: geo.full, ease: 'power2.inOut', duration: 0.8 }, 0.08)
-        .to(img, { scale: 1, ease: 'none', duration: 1 }, 0)
-        .to('.hero__cue, .hero__hint', { opacity: 0, duration: 0.2 }, 0)
-        .to('.hero__shade', { opacity: 1, duration: 0.5 }, 0.3)
+        .fromTo(img, { scale: 1.15 }, { scale: 1, ease: 'none', duration: 1 }, 0)
+        .fromTo('.hero__cue, .hero__hint', { opacity: 1 }, { opacity: 0, duration: 0.2 }, 0)
+        .fromTo('.hero__shade', { opacity: 0 }, { opacity: 1, duration: 0.5 }, 0.3)
         .fromTo('#heroReveal', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 0.45)
         .to({}, { duration: 0.2 });
 
@@ -272,9 +309,15 @@ function strand() {
         },
     });
 
-    gsap.fromTo('#strandThread', { drawSVG: '0%' }, {
-        drawSVG: '100%', ease: 'none',
-        scrollTrigger: { trigger: '#strand', start: 'top top', end: () => `+=${distance()}`, scrub: 1, invalidateOnRefresh: true },
+    const getThreadLead = () => {
+        const tw = Math.max(1, track.scrollWidth);
+        const pct = Math.min(46, Math.max(26, Math.ceil(((window.innerWidth * 0.9) / tw) * 100)));
+        return `0% ${pct}%`;
+    };
+
+    gsap.fromTo('#strandThread', { drawSVG: getThreadLead }, {
+        drawSVG: '0% 100%', ease: 'none',
+        scrollTrigger: { trigger: '#strand', start: 'top top', end: () => `+=${distance()}`, scrub: 0.6, invalidateOnRefresh: true },
     });
     gsap.fromTo('.panel__leaf path', { drawSVG: '0%' }, {
         drawSVG: '100%', duration: 2.4, ease: 'power2.inOut',
@@ -966,29 +1009,43 @@ function initCatalogInteractions() {
     const engagementSelect = $('#inqType');
     const nameInput = $('#inqName');
 
+    const prefillProductQuote = (product) => {
+        if (!form || !product) return;
+
+        if (unlockPanel && !unlockPanel.hidden) {
+            unlockPanel.hidden = true;
+            form.hidden = false;
+        }
+
+        if (engagementSelect) {
+            if (/rug|mat|décor|decor|mandala|medallion|carpet/i.test(product)) {
+                engagementSelect.value = 'Home Décor & Braided Mandala Rugs';
+            } else if (/two-tone|custom|indigo|series|tote bag|oem|drawstring|mishka|do re me|sakuya/i.test(product)) {
+                engagementSelect.value = 'Custom OEM / Private Label Jute Bags';
+            } else if (/luxury|briefcase|suite|weekender|backpack|laptop|corporate/i.test(product)) {
+                engagementSelect.value = 'Corporate & Event Eco-Gifting';
+            } else {
+                engagementSelect.value = 'Wholesale / Bulk Export Quote & Brochure';
+            }
+        }
+
+        if (msgBox) {
+            msgBox.value = `Requesting wholesale pricing, MOQ & sample dispatch details for: ${product}.\nEstimated quantity: `;
+        }
+    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const requestedProduct = urlParams.get('product');
+    if (requestedProduct && form) {
+        prefillProductQuote(requestedProduct);
+    }
+
     enquiryButtons.forEach((btn) => {
         btn.addEventListener('click', () => {
             const product = btn.dataset.enquireProduct;
             if (!form) return;
 
-            if (unlockPanel && !unlockPanel.hidden) {
-                unlockPanel.hidden = true;
-                form.hidden = false;
-            }
-
-            if (engagementSelect) {
-                if (/rug|mat|décor|decor/i.test(product)) {
-                    engagementSelect.value = 'Home Décor & Braided Mandala Rugs';
-                } else if (/two-tone|custom|indigo|series/i.test(product)) {
-                    engagementSelect.value = 'Custom OEM / Private Label Jute Bags';
-                } else {
-                    engagementSelect.value = 'Wholesale / Bulk Export Quote & Brochure';
-                }
-            }
-
-            if (msgBox) {
-                msgBox.value = `Requesting wholesale pricing, MOQ & sample dispatch details for: ${product}.\nEstimated quantity: `;
-            }
+            prefillProductQuote(product);
 
             if (lenis) lenis.scrollTo('#inquiryForm', { duration: 1.4 });
             else form.scrollIntoView({ behavior: 'smooth', block: 'start' });
