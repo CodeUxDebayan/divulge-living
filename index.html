@@ -1349,6 +1349,71 @@
         </div>
     </div>
 
+    <!-- ═══════════ TIMED ENQUIRY / CATALOGUE POPUP (6s) ═══════════ -->
+    <div class="lead-modal" id="leadModal" role="dialog" aria-modal="true" aria-labelledby="leadModalTitle" hidden>
+        <div class="lead-modal__backdrop" id="leadModalBackdrop"></div>
+        <div class="lead-modal__dialog">
+            <button type="button" class="lead-modal__close" id="leadModalClose" aria-label="Close enquiry dialogue">×</button>
+            <div class="lead-modal__content">
+                <div class="lead-modal__badge mono">
+                    <span class="lead-modal__dot"></span>
+                    <span>Export Desk · 2026 Catalogue</span>
+                </div>
+                <h3 id="leadModalTitle" class="lead-modal__title">Request the 2026 Export Catalogue &amp; Wholesale Pricing</h3>
+                <p class="lead-modal__desc">Access full technical specifications, MOQs, packaging parameters, and direct factory pricing for international retailers, boutiques, and design curators.</p>
+
+                <form class="lead-modal__form" id="leadModalForm">
+                    <div class="lead-modal__grid">
+                        <div class="lead-modal__field">
+                            <label for="lmName" class="mono">Full Name *</label>
+                            <input id="lmName" name="name" required placeholder="Your name" autocomplete="name">
+                        </div>
+                        <div class="lead-modal__field">
+                            <label for="lmEmail" class="mono">Business Email *</label>
+                            <input id="lmEmail" name="email" type="email" required placeholder="you@company.com" autocomplete="email">
+                        </div>
+                    </div>
+                    <div class="lead-modal__grid">
+                        <div class="lead-modal__field">
+                            <label for="lmCompany" class="mono">Company / Organization *</label>
+                            <input id="lmCompany" name="institution" required placeholder="Studio, Boutique, Importer..." autocomplete="organization">
+                        </div>
+                        <div class="lead-modal__field">
+                            <label for="lmCountry" class="mono">Country / Port *</label>
+                            <input id="lmCountry" name="country" required placeholder="Germany, UK, USA, UAE..." autocomplete="country-name">
+                        </div>
+                    </div>
+                    <div class="lead-modal__field">
+                        <label for="lmInterest" class="mono">Inquiry Type</label>
+                        <select id="lmInterest" name="engagement">
+                            <option value="Wholesale &amp; Export Catalogue Access">Wholesale &amp; Export Catalogue Access (PDF)</option>
+                            <option value="Custom OEM &amp; Private Label Jute Bags">Custom OEM &amp; Private Label Jute Bags</option>
+                            <option value="Handcrafted Crochet Bags &amp; Slings">Handcrafted Crochet Bags &amp; Slings</option>
+                            <option value="Luxury Jute Suites &amp; Executive Bags">Luxury Jute Suites &amp; Executive Bags</option>
+                            <option value="Home Décor &amp; Braided Mandala Rugs">Home Décor &amp; Braided Mandala Rugs</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="lead-modal__submit" id="leadModalSubmit">
+                        <span>Submit &amp; Download 2026 Catalogue (PDF)</span>
+                        <span aria-hidden="true">↓</span>
+                    </button>
+                    <p class="lead-modal__footnote mono">Instant PDF download begins upon submission · Logged to Kolkata export desk</p>
+                </form>
+
+                <div class="lead-modal__success" id="leadModalSuccess" hidden>
+                    <div class="lead-modal__success-icon">✓</div>
+                    <h4>Inquiry Recorded &amp; Catalogue Unlocked</h4>
+                    <p id="leadModalSuccessMsg">Thank you! Your request has reached Divulge Living. Your catalogue PDF download has started automatically.</p>
+                    <div class="lead-modal__success-actions">
+                        <a href="/Divulge_CATALOGUE.pdf" download="Divulge-Living-Export-Catalogue.pdf" class="lead-modal__btn-download">Download Catalogue Again (PDF) ↓</a>
+                        <button type="button" class="lead-modal__btn-close" id="leadModalSuccessClose">Continue Browsing Archive</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script type="module" src="/src/main.js"></script>
 </body>
 </html>

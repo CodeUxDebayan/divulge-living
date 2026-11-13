@@ -1,0 +1,7 @@
+name = "divulge-living"
+pages_build_output_dir = "dist"
+compatibility_date = "2024-09-23"
+
+[vars]
+VITE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw-L0F08qVA2gJGU3uM_h3x6Jhvqc9bLhCd6EYf1qdUGb5QjfW7crwnXRFuhjihu2k6/exec"
+VITE_BROCHURE_URL = "/Divulge_CATALOGUE.pdf"

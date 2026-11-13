@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSegmentFiltering();
     initScrollTop();
     initWhatsAppModal();
+    initTimedLeadModal();
     initYear();
 
     if (reduceMotion) {
@@ -507,7 +508,7 @@ function initWhatsAppModal() {
     const pingStatus = $('#waPingStatus');
     const studioLink = $('#waStudioLink');
     const kanikaLink = $('#waKanikaLink');
-    const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbz0q_RtAstHof_ho-TrxwaKdKkzSsQV9C0FP36H9W_KrF6aSPpeoB-QoyczGuPyEmKv/exec';
+    const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbw-L0F08qVA2gJGU3uM_h3x6Jhvqc9bLhCd6EYf1qdUGb5QjfW7crwnXRFuhjihu2k6/exec';
 
     if (!modal || !trigger) return;
 
@@ -584,4 +585,109 @@ function initWhatsAppModal() {
             }
         });
     }
+}
+
+
+/* ═══════════ TIMED ENQUIRY / CATALOGUE POPUP (6s) ═══════════ */
+function triggerDownload(url, filename) {
+    const a = document.createElement('a');
+    a.href = url;
+    a.setAttribute('download', filename || 'Divulge-Living-Export-Catalogue.pdf');
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => a.remove(), 100);
+}
+
+function initTimedLeadModal() {
+    const modal = $('#leadModal');
+    if (!modal) return;
+    const backdrop = $('#leadModalBackdrop');
+    const closeBtn = $('#leadModalClose');
+    const form = $('#leadModalForm');
+    const successPanel = $('#leadModalSuccess');
+    const successClose = $('#leadModalSuccessClose');
+    const STORAGE_KEY = 'divulge_lead_popup_dismissed_v1';
+
+    const closeModal = () => {
+        modal.setAttribute('hidden', '');
+        document.body.style.overflow = '';
+        try {
+            sessionStorage.setItem(STORAGE_KEY, 'true');
+        } catch {}
+    };
+
+    const openModal = () => {
+        try {
+            if (sessionStorage.getItem(STORAGE_KEY) === 'true') return;
+        } catch {}
+
+        modal.removeAttribute('hidden');
+        document.body.style.overflow = 'hidden';
+        const firstInput = $('input', form);
+        if (firstInput) firstInput.focus();
+    };
+
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (backdrop) backdrop.addEventListener('click', closeModal);
+    if (successClose) successClose.addEventListener('click', closeModal);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.hasAttribute('hidden')) closeModal();
+    });
+
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = $('#leadModalSubmit');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span>Registering Inquiry...</span>';
+            }
+
+            const fd = new FormData(form);
+            const payload = {
+                action: 'lead_inquiry',
+                source: 'timed_6s_enquiry_popup',
+                timestamp: new Date().toISOString(),
+                name: String(fd.get('name') || '').trim(),
+                email: String(fd.get('email') || '').trim(),
+                company: String(fd.get('institution') || '').trim(),
+                country: String(fd.get('country') || '').trim(),
+                engagement: String(fd.get('engagement') || 'Wholesale & Export Catalogue Access'),
+                message: 'Submitted via 6-second catalogue lead popup.',
+            };
+
+            const webhookUrl = (typeof LEAD_CAPTURE_CONFIG !== 'undefined' ? LEAD_CAPTURE_CONFIG.appsScriptUrl : null) || 
+                               (typeof WEBHOOK_URL !== 'undefined' ? WEBHOOK_URL : null) || 
+                               'https://script.google.com/macros/s/AKfycbw-L0F08qVA2gJGU3uM_h3x6Jhvqc9bLhCd6EYf1qdUGb5QjfW7crwnXRFuhjihu2k6/exec';
+
+            if (webhookUrl) {
+                try {
+                    await fetch(webhookUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(payload),
+                    });
+                } catch {}
+            }
+
+            const brochureUrl = (typeof LEAD_CAPTURE_CONFIG !== 'undefined' && LEAD_CAPTURE_CONFIG.brochureUrl) || '/Divulge_CATALOGUE.pdf';
+            const brochureName = (typeof LEAD_CAPTURE_CONFIG !== 'undefined' && LEAD_CAPTURE_CONFIG.brochureFilename) || 'Divulge-Living-Export-Catalogue.pdf';
+            triggerDownload(brochureUrl, brochureName);
+
+            form.hidden = true;
+            if (successPanel) successPanel.hidden = false;
+            try {
+                sessionStorage.setItem(STORAGE_KEY, 'true');
+            } catch {}
+        });
+    }
+
+    setTimeout(() => {
+        try {
+            if (sessionStorage.getItem(STORAGE_KEY) === 'true') return;
+        } catch {}
+        openModal();
+    }, 6000);
 }

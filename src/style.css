@@ -3160,3 +3160,254 @@ body { background-color: var(--paper); }
     .segment-cards { grid-template-columns: 1fr; }
     .products-grid { grid-template-columns: 1fr; }
 }
+
+
+/* ═══════════ TIMED LEAD MODAL (6-SECOND POPUP) ═══════════ */
+.lead-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(1rem, 3.5vw, 2.5rem);
+    pointer-events: none;
+}
+.lead-modal[hidden] {
+    display: none;
+}
+.lead-modal__backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 12, 10, 0.72);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    pointer-events: auto;
+    animation: leadFadeIn 0.4s ease-out;
+}
+.lead-modal__dialog {
+    position: relative;
+    z-index: 2;
+    pointer-events: auto;
+    width: 100%;
+    max-width: 580px;
+    background: #181412;
+    color: #F6F3EB;
+    border: 1px solid rgba(201, 164, 106, 0.4);
+    border-radius: 12px;
+    box-shadow: 0 35px 90px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+    padding: clamp(2rem, 4vw, 2.8rem);
+    animation: leadPopIn 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes leadFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes leadPopIn {
+    from { opacity: 0; transform: translateY(24px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.lead-modal__close {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.2rem;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    color: #A39B92;
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.25s, color 0.25s, border-color 0.25s;
+}
+.lead-modal__close:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #FFF;
+    border-color: rgba(201, 164, 106, 0.5);
+}
+.lead-modal__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: rgba(201, 164, 106, 0.1);
+    border: 1px solid rgba(201, 164, 106, 0.25);
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    margin-bottom: 1rem;
+}
+.lead-modal__dot {
+    width: 6px;
+    height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--gold);
+}
+.lead-modal__title {
+    font-family: var(--serif);
+    font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+    font-weight: 500;
+    line-height: 1.2;
+    color: #FFF;
+    margin-bottom: 0.6rem;
+}
+.lead-modal__desc {
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: #C5BCB2;
+    margin-bottom: 1.5rem;
+}
+.lead-modal__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+    margin-bottom: 0.9rem;
+}
+.lead-modal__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 0.9rem;
+}
+.lead-modal__grid .lead-modal__field {
+    margin-bottom: 0;
+}
+.lead-modal__field label {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+}
+.lead-modal__field input,
+.lead-modal__field select {
+    width: 100%;
+    padding: 0.7rem 0.85rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    color: #FFF;
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    transition: border-color 0.2s, background 0.2s;
+}
+.lead-modal__field select option {
+    background: #181412;
+    color: #FFF;
+}
+.lead-modal__field input:focus,
+.lead-modal__field select:focus {
+    outline: none;
+    border-color: var(--gold);
+    background: rgba(255, 255, 255, 0.08);
+}
+.lead-modal__submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    width: 100%;
+    padding: 0.95rem 1.4rem;
+    background: var(--gold);
+    color: #120F0E;
+    font-family: var(--sans);
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(201, 164, 106, 0.3);
+    transition: background 0.25s, transform 0.25s, box-shadow 0.25s;
+    margin-top: 0.6rem;
+}
+.lead-modal__submit:hover {
+    background: #DFBC82;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(201, 164, 106, 0.45);
+}
+.lead-modal__footnote {
+    font-size: 0.68rem;
+    color: #8C847B;
+    text-align: center;
+    margin-top: 0.65rem;
+    line-height: 1.4;
+}
+.lead-modal__success {
+    text-align: center;
+    padding: 1rem 0;
+}
+.lead-modal__success-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    background: rgba(37, 211, 102, 0.15);
+    border: 1px solid #25D366;
+    color: #25D366;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.lead-modal__success h4 {
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    color: #FFF;
+    margin-bottom: 0.5rem;
+}
+.lead-modal__success p {
+    font-size: 0.88rem;
+    color: #C5BCB2;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+}
+.lead-modal__success-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+.lead-modal__btn-download {
+    display: inline-block;
+    padding: 0.85rem 1.4rem;
+    background: var(--gold);
+    color: #120F0E;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+.lead-modal__btn-download:hover {
+    background: #DFBC82;
+}
+.lead-modal__btn-close {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #A39B92;
+    padding: 0.75rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    transition: color 0.2s, border-color 0.2s;
+}
+.lead-modal__btn-close:hover {
+    color: #FFF;
+    border-color: #FFF;
+}
+@media (max-width: 600px) {
+    .lead-modal__grid {
+        grid-template-columns: 1fr;
+    }
+}
