@@ -61,6 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initScrollTop();
     initWhatsAppModal();
     initTimedLeadModal();
+    initVolumePills();
+    initLeadHookBanner();
     initYear();
 
     if (reduceMotion) {
@@ -1131,6 +1133,113 @@ function initCatalogInteractions() {
             }, 600);
         });
     });
+}
+
+function initVolumePills() {
+    const pills = $$('.volume-pill');
+    const typeSelect = $('#inqType');
+    const msgBox = $('#inqMessage');
+    if (!pills.length || !typeSelect) return;
+
+    pills.forEach((pill) => {
+        pill.addEventListener('click', () => {
+            pills.forEach((p) => p.classList.remove('is-active'));
+            pill.classList.add('is-active');
+
+            const vol = pill.dataset.vol;
+            const engagement = pill.dataset.type;
+            if (engagement) typeSelect.value = engagement;
+
+            if (msgBox) {
+                const current = msgBox.value.trim();
+                const prefix = `[Selected Volume: ${vol}]`;
+                if (!current) {
+                    msgBox.value = `${prefix}\nRequesting FOB Kolkata wholesale pricing, custom sampling, and container load specifications.`;
+                } else if (!current.includes(prefix)) {
+                    msgBox.value = `${prefix}\n${current}`;
+                }
+                msgBox.focus();
+            }
+        });
+    });
+}
+
+function initLeadHookBanner() {
+    const banner = $('#leadHookBanner');
+    if (!banner) return;
+    const closeBtn = $('#leadHookClose');
+    const downloadBtn = $('#leadHookDownloadBtn');
+    const waBtn = $('#leadHookWaBtn');
+    const STORAGE_KEY = 'divulge_lead_hook_dismissed_v1';
+
+    const dismiss = () => {
+        banner.classList.remove('is-active');
+        setTimeout(() => banner.setAttribute('hidden', ''), 450);
+        try {
+            sessionStorage.setItem(STORAGE_KEY, 'true');
+        } catch {}
+    };
+
+    const showBanner = () => {
+        try {
+            if (sessionStorage.getItem(STORAGE_KEY) === 'true') return;
+        } catch {}
+        banner.removeAttribute('hidden');
+        requestAnimationFrame(() => banner.classList.add('is-active'));
+    };
+
+    if (closeBtn) closeBtn.addEventListener('click', dismiss);
+
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', () => {
+            dismiss();
+            const modal = $('#leadModal');
+            if (modal) {
+                modal.removeAttribute('hidden');
+                document.body.style.overflow = 'hidden';
+                const firstInput = $('input', modal);
+                if (firstInput) firstInput.focus();
+            } else {
+                const form = $('#inquiryForm');
+                if (form) {
+                    if (lenis) lenis.scrollTo('#inquiryForm', { duration: 1.2 });
+                    else form.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+    }
+
+    if (waBtn) {
+        waBtn.addEventListener('click', () => {
+            dismiss();
+            const waModal = $('#waModal');
+            if (waModal) {
+                waModal.removeAttribute('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+        });
+    }
+
+    // Trigger after 9 seconds or when scrolled 30% down
+    let triggered = false;
+    const triggerHook = () => {
+        if (triggered) return;
+        triggered = true;
+        showBanner();
+    };
+
+    setTimeout(() => {
+        triggerHook();
+    }, 9000);
+
+    const onScroll = () => {
+        const docH = document.documentElement.scrollHeight - window.innerHeight;
+        if (docH > 0 && (window.scrollY / docH) > 0.3) {
+            triggerHook();
+            window.removeEventListener('scroll', onScroll);
+        }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
 }
 
 function initScrollTop() {

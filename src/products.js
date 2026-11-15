@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initScrollTop();
     initWhatsAppModal();
     initTimedLeadModal();
+    initLeadHookBanner();
     initYear();
 
     if (reduceMotion) {
@@ -690,4 +691,75 @@ function initTimedLeadModal() {
         } catch {}
         openModal();
     }, 15000);
+}
+
+function initLeadHookBanner() {
+    const banner = $('#leadHookBanner');
+    if (!banner) return;
+    const closeBtn = $('#leadHookClose');
+    const downloadBtn = $('#leadHookDownloadBtn');
+    const waBtn = $('#leadHookWaBtn');
+    const STORAGE_KEY = 'divulge_lead_hook_dismissed_v1';
+
+    const dismiss = () => {
+        banner.classList.remove('is-active');
+        setTimeout(() => banner.setAttribute('hidden', ''), 450);
+        try {
+            sessionStorage.setItem(STORAGE_KEY, 'true');
+        } catch {}
+    };
+
+    const showBanner = () => {
+        try {
+            if (sessionStorage.getItem(STORAGE_KEY) === 'true') return;
+        } catch {}
+        banner.removeAttribute('hidden');
+        requestAnimationFrame(() => banner.classList.add('is-active'));
+    };
+
+    if (closeBtn) closeBtn.addEventListener('click', dismiss);
+
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', () => {
+            dismiss();
+            const modal = $('#leadModal');
+            if (modal) {
+                modal.removeAttribute('hidden');
+                document.body.style.overflow = 'hidden';
+                const firstInput = $('input', modal);
+                if (firstInput) firstInput.focus();
+            }
+        });
+    }
+
+    if (waBtn) {
+        waBtn.addEventListener('click', () => {
+            dismiss();
+            const waModal = $('#waModal');
+            if (waModal) {
+                waModal.removeAttribute('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+        });
+    }
+
+    let triggered = false;
+    const triggerHook = () => {
+        if (triggered) return;
+        triggered = true;
+        showBanner();
+    };
+
+    setTimeout(() => {
+        triggerHook();
+    }, 9000);
+
+    const onScroll = () => {
+        const docH = document.documentElement.scrollHeight - window.innerHeight;
+        if (docH > 0 && (window.scrollY / docH) > 0.3) {
+            triggerHook();
+            window.removeEventListener('scroll', onScroll);
+        }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
 }
