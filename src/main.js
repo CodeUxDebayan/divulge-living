@@ -366,27 +366,29 @@ function strand() {
 
 /* II · The Nest ──────────────────────────────────────────────── */
 function nest() {
-    const mascot = $('.nest__mascot-img');
+    const strokes = $$('#nestSvg .d');
+    const weave = $$('#nestSvg .d-weave .d');
+    const bird = $$('#nestSvg .d-bird .d');
+    const frame = strokes.filter((p) => !weave.includes(p) && !bird.includes(p));
     const caption = $('.nest__caption');
 
     const build = (tl) => {
-        if (mascot) {
-            tl.fromTo(mascot,
-                { opacity: 0, y: 40, scale: 0.94 },
-                { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: 'power2.out' },
-                0
-            );
-        }
+        tl
+            .from(frame, { drawSVG: '0%', stagger: 0.1, duration: 0.6, ease: 'none' }, 0)
+            .from(bird, { drawSVG: '0%', stagger: 0.14, duration: 0.55, ease: 'none' }, 0.22)
+            .from(weave, { drawSVG: '0%', stagger: 0.04, duration: 0.4, ease: 'none' }, 0.45);
+
         if (caption) {
             tl.fromTo(caption,
-                { opacity: 0, y: 18 },
+                { opacity: 0, y: 16 },
                 { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' },
-                0.15
+                0.6
             );
         }
+
         tl
             .fromTo('.poem__head', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.35 }, 0.2)
-            .fromTo('.poem__row', { opacity: 0.14, y: 14 }, { opacity: 1, y: 0, stagger: 0.1, duration: 0.35 }, 0.28)
+            .fromTo('.poem__row', { opacity: 0.14, y: 14 }, { opacity: 1, y: 0, stagger: 0.08, duration: 0.35 }, 0.25)
             .from('.poem cite', { opacity: 0, duration: 0.25 }, 1.1)
             .to({}, { duration: 0.25 });
 
@@ -395,7 +397,7 @@ function nest() {
 
     const mm = gsap.matchMedia();
     mm.add('(min-width: 1025px)', () => build(gsap.timeline({
-        scrollTrigger: { trigger: '#nest', start: 'top top', end: '+=135%', pin: '.nest__pin', scrub: 1 },
+        scrollTrigger: { trigger: '#nest', start: 'top top', end: '+=150%', pin: '.nest__pin', scrub: 1 },
     })));
     mm.add('(max-width: 1024px)', () => build(gsap.timeline({
         scrollTrigger: { trigger: '.nest__pin', start: 'top 75%', end: 'bottom 70%', scrub: 1 },
@@ -470,10 +472,36 @@ function hands() {
         scrollTrigger: { trigger: '.hands__quote', start: 'top 80%', end: 'bottom 45%', scrub: true },
     });
 
-    gsap.from('.impact-banner', {
-        y: 40, opacity: 0, duration: 1.1, ease: 'expo.out',
-        scrollTrigger: { trigger: '#impact', start: 'top 80%' },
-    });
+    const impactSection = $('#impact');
+    if (impactSection) {
+        const counterEl = $('#impactCounter');
+        const impactTl = gsap.timeline({
+            scrollTrigger: { trigger: impactSection, start: 'top 82%' }
+        });
+        impactTl.from(impactSection, {
+            y: 45, opacity: 0, duration: 0.9, ease: 'power3.out'
+        });
+        if (counterEl) {
+            const countState = { val: 0 };
+            impactTl.to(countState, {
+                val: 275000,
+                duration: 2.2,
+                ease: 'power2.out',
+                onUpdate: () => {
+                    counterEl.textContent = Math.floor(countState.val).toLocaleString('en-US');
+                }
+            }, 0.15);
+        }
+        impactTl.from('.impact-banner__plus', {
+            scale: 0, opacity: 0, rotation: 35, duration: 0.6, ease: 'back.out(2)'
+        }, 1.6);
+        impactTl.from('.impact-banner__label', {
+            y: 16, opacity: 0, duration: 0.7, ease: 'power2.out'
+        }, 0.35);
+        impactTl.from('.impact-banner__heading, .impact-banner__story p', {
+            y: 24, opacity: 0, stagger: 0.15, duration: 0.85, ease: 'power2.out'
+        }, 0.45);
+    }
 
     const cards = $$('.card');
     gsap.from(cards, {
@@ -932,6 +960,7 @@ function createSound() {
 
 function initMusicPrompt() {
     const prompt = $('#musicPrompt');
+    const backdrop = $('#musicModalBackdrop');
     const enableBtn = $('#musicEnableBtn');
     const dismissBtn = $('#musicDismissBtn');
     if (!prompt) return;
@@ -940,12 +969,12 @@ function initMusicPrompt() {
 
     showMusicPrompt = () => {
         if (resolved || sound.isEnabled()) return;
-        prompt.hidden = false;
+        prompt.removeAttribute('hidden');
     };
 
     hideMusicPrompt = () => {
         resolved = true;
-        prompt.hidden = true;
+        prompt.setAttribute('hidden', '');
     };
 
     if (enableBtn) {
@@ -961,6 +990,20 @@ function initMusicPrompt() {
             hideMusicPrompt();
         });
     }
+
+    if (backdrop) {
+        backdrop.addEventListener('click', () => {
+            sound.setEnabled(false);
+            hideMusicPrompt();
+        });
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !prompt.hasAttribute('hidden')) {
+            sound.setEnabled(false);
+            hideMusicPrompt();
+        }
+    });
 }
 
 function initSoundToggle() {
@@ -1500,5 +1543,5 @@ function initTimedLeadModal() {
             if (sessionStorage.getItem(STORAGE_KEY) === 'true') return;
         } catch {}
         openModal();
-    }, 6000);
+    }, 15000);
 }

@@ -539,10 +539,55 @@
     <section class="nest" id="nest" data-bg="#1D1510" data-chapter="II" data-name="The Nest" data-theme="dark" aria-labelledby="nestTitle">
         <div class="nest__pin">
             <div class="nest__drawing">
-                <div class="nest__mascot-wrapper">
-                    <img src="assets/web/brand/weaver-bird-nest.webp" alt="The Baya Weaver bird perched on a branch beside its architectural teardrop nest — Divulge Living Animal Soul &amp; Brand Mascot" class="nest__mascot-img" width="760" height="584" decoding="async" loading="lazy">
-                </div>
-                <p class="nest__caption mono"><i>Ploceus philippinus</i> — The Baya Weaver (Babui Pakhi), our brand mascot and animal soul. Master architects who weave zero-waste suspended nests without adhesives.</p>
+                <svg class="nest__svg" id="nestSvg" viewBox="0 0 440 550" fill="none" role="img" aria-labelledby="nestSvgTitle">
+                    <title id="nestSvgTitle">A Baya weaver bird perched on a palm frond beside its teardrop nest, drawn strand by strand</title>
+                    <!-- Palm frond branches -->
+                    <path class="d" d="M10 40 Q150 70 210 65 Q310 60 430 35"/>
+                    <path class="d d--thin" d="M50 48 Q100 80 140 120 M80 54 Q110 96 128 150 M320 62 Q360 90 410 110 M350 54 Q382 90 400 140"/>
+
+                    <!-- Weaver Bird Line Art (perched on the palm branch, watching its nest) -->
+                    <!-- Reference: Baya weaver line art from user attachment -->
+                    <g class="nest__bird d-bird" id="nestBird" transform="translate(285, -12) scale(0.52)">
+                        <!-- Bird continuous line contour: beak, eye loop, crown, nape, back, tail, belly, throat -->
+                        <path class="d" d="M 4 27 L 22 28 C 22 23 27 20 30 24 C 32 28 28 31 24 29 L 22 28 C 19 34 18 46 20 62 C 24 88 36 116 66 126 C 90 133 101 124 105 108 C 112 126 118 148 126 162 C 120 150 112 135 108 118 C 115 92 110 62 94 44 C 80 26 66 3 42 4 C 28 5 16 14 10 22 L 4 27 Z"/>
+                        <!-- Inner wing contour -->
+                        <path class="d" d="M 52 42 C 40 68 44 104 78 122 C 90 126 102 118 108 102 C 112 84 106 60 92 46 C 80 34 64 34 52 42"/>
+                        <!-- Perching feet gripping the branch -->
+                        <path class="d" d="M 44 122 L 42 138 M 30 138 L 54 138"/>
+                    </g>
+
+                    <!-- Hanging suspension cord -->
+                    <path class="d" d="M210 65 Q205 130 195 200 Q190 260 210 320"/>
+                    <path class="d" d="M214 65 Q220 140 225 210 Q230 270 210 320"/>
+                    <!-- Teardrop chamber outline -->
+                    <path class="d" d="M210 210 C 130 210, 118 300, 122 340 C 128 410, 170 450, 210 450 C 250 450, 292 410, 298 340 C 302 300, 290 210, 210 210 Z"/>
+
+                    <!-- Intricate interlocking weave strands -->
+                    <g class="d-weave">
+                        <path class="d d--thin" d="M135 270 Q210 250 285 270"/>
+                        <path class="d d--thin" d="M125 300 Q210 280 295 300"/>
+                        <path class="d d--thin" d="M120 330 Q210 310 300 330"/>
+                        <path class="d d--thin" d="M125 360 Q210 340 295 360"/>
+                        <path class="d d--thin" d="M135 390 Q210 370 285 390"/>
+                        <path class="d d--thin" d="M150 420 Q210 405 270 420"/>
+                        <path class="d d--thin" d="M150 260 Q130 330 160 410"/>
+                        <path class="d d--thin" d="M175 250 Q165 330 185 430"/>
+                        <path class="d d--thin" d="M210 245 Q210 330 210 440"/>
+                        <path class="d d--thin" d="M245 250 Q255 330 235 430"/>
+                        <path class="d d--thin" d="M270 260 Q290 330 260 410"/>
+                        <!-- Additional cross-knots for rich tactile texture -->
+                        <path class="d d--thin" d="M160 290 Q210 320 260 290"/>
+                        <path class="d d--thin" d="M145 345 Q210 375 275 345"/>
+                        <path class="d d--thin" d="M170 380 Q210 400 250 380"/>
+                        <path class="d d--thin" d="M185 230 Q200 300 180 370"/>
+                        <path class="d d--thin" d="M235 230 Q220 300 240 370"/>
+                    </g>
+
+                    <!-- Entrance tube & rim at bottom -->
+                    <path class="d" d="M185 440 Q180 480 185 510 L235 510 Q240 480 235 440"/>
+                    <ellipse class="d" cx="210" cy="510" rx="25" ry="9"/>
+                </svg>
+                <p class="nest__caption mono"><i>Ploceus philippinus</i> — The Baya Weaver (Babui Pakhi), our animal soul and brand mascot. Master architects who weave zero-waste suspended nests without adhesives.</p>
             </div>
 
             <div class="nest__text">
@@ -674,7 +719,7 @@
         <!-- ═══════════ ARTISAN IMPACT & GLOBAL REACH ═══════════ -->
         <div class="impact-banner" id="impact">
             <div class="impact-banner__stat">
-                <span class="impact-banner__number">275,000<span class="impact-banner__plus">+</span></span>
+                <span class="impact-banner__number"><span id="impactCounter">275,000</span><span class="impact-banner__plus">+</span></span>
                 <p class="impact-banner__label mono">Handcrafted Pieces Carried Worldwide</p>
             </div>
             <div class="impact-banner__story">
@@ -687,7 +732,7 @@
         <div class="deck" id="deck">
             <div class="deck__header deck__header--split">
                 <div>
-                    <p class="deck__label mono">Export Catalog · Handmade in Howrah &amp; Hooghly · Every Weave Has a Story</p>
+                    <p class="deck__label mono"><img src="assets/web/brand/divulge-emblem-gold.webp" class="deck__label-emblem" alt="" width="18" height="16"> DIVULGE<span class="brand-reg">®</span> Export Catalog · Handmade in Howrah &amp; Hooghly · Every Weave Has a Story</p>
                     <h3 class="deck__title">Handicrafts, Crochet Bags &amp; Mandala Décor</h3>
                 </div>
                 <div class="deck__filters" role="tablist" aria-label="Filter product categories">
@@ -847,7 +892,7 @@
         <div class="export-suite" id="export">
             <div class="export-suite__head">
                 <div>
-                    <p class="mono export-suite__eyebrow">Global B2B &amp; Private Label · Direct Manufacturer-Exporter</p>
+                    <p class="mono export-suite__eyebrow"><img src="assets/web/brand/divulge-emblem-gold.webp" class="export-suite__eyebrow-emblem" alt="" width="18" height="16"> DIVULGE<span class="brand-reg">®</span> · Global B2B &amp; Private Label · Direct Manufacturer-Exporter</p>
                     <h3 class="export-suite__title">India’s Premier Handmade &amp; Zero-Waste Jute Product Exporter</h3>
                 </div>
                 <p class="export-suite__lead">Engineered for global fashion labels, supermarket chains, luxury hospitality, and sustainable brands. We unite the heritage of 63++ Howrah &amp; Hooghly master artisans with commercial export precision — zero middlemen, manufacturer-direct wholesale pricing, and world-class finish.</p>
@@ -1000,27 +1045,27 @@
         <ol class="record" id="record">
             <li class="record__item">
                 <img src="assets/web/editorial/after-the-shift.webp" alt="Artisan workshop after the shift in Howrah" loading="lazy" decoding="async" width="479" height="720">
-                <p class="mono">2021 · Genesis</p><p>Enterprise incorporation, registered trademark &amp; founding Howrah artisan circle</p>
+                <p class="mono mono--gold">2021 · Genesis</p><p>Enterprise incorporation, registered DIVULGE<span class="brand-reg">®</span> trademark &amp; founding Howrah artisan circle</p>
             </li>
             <li class="record__item">
                 <img src="assets/web/editorial/expo-icar-ninfet-2022.webp" alt="A stall with a banner reading 'M/s. Divulge, ICAR-NINFET Start up'" loading="lazy" decoding="async" width="540" height="720">
-                <p class="mono">Mar 2022 · Research Incubation</p><p>ICAR-NINFET startup pavilion &amp; natural fibre research incubation in Kolkata</p>
+                <p class="mono mono--ochre">Mar 2022 · Research Incubation</p><p>ICAR-NINFET startup pavilion &amp; natural fibre research incubation in Kolkata</p>
             </li>
             <li class="record__item">
                 <img src="assets/web/editorial/expo-berlin-2022.webp" alt="The Divulge stand 1B-37 at Messe Berlin with handcrafted jute bags" loading="lazy" decoding="async" width="720" height="540">
-                <p class="mono">Jul 2022 · 1st International Expo · Berlin</p><p>Messe Berlin, Stand 1B-37 — our landmark first international exposition in Europe, opening the doorstep to global export markets</p>
+                <p class="mono mono--terracotta">Jul 2022 · 1st International Expo · Berlin</p><p>Messe Berlin, Stand 1B-37 — our landmark first international exposition in Europe, opening the doorstep to global export markets</p>
             </li>
             <li class="record__item">
                 <img src="assets/web/editorial/expo-njb-pavilion-2022.webp" alt="National Jute Board central pavilion showcase featuring Divulge handcrafted bags and floor mats" loading="lazy" decoding="async" width="720" height="540">
-                <p class="mono">Aug 2022 · Premier Domestic Exhibition</p><p>National Jute Board Central Pavilion, Kolkata — a flagship domestic showcase celebrating Divulge among India’s finest contemporary jute innovators</p>
+                <p class="mono mono--sage">Aug 2022 · Premier Domestic Exhibition</p><p>National Jute Board Central Pavilion, Kolkata — a flagship domestic showcase celebrating Divulge among India’s finest contemporary jute innovators</p>
             </li>
             <li class="record__item">
                 <img src="assets/web/editorial/expo-rajiv-sethi.webp" alt="Padma Bhushan Rajiv Sethi at the Divulge exhibition stand" loading="lazy" decoding="async" width="570" height="760">
-                <p class="mono">Feb 2024 · Mentorship &amp; Expansion</p><p>Cultural dialogue &amp; residence mentorship with Padma Bhushan Rajiv Sethi as our Howrah &amp; Hooghly collective expands</p>
+                <p class="mono mono--amber">Feb 2024 · Mentorship &amp; Expansion</p><p>Cultural dialogue &amp; residence mentorship with Padma Bhushan Rajiv Sethi as our Howrah &amp; Hooghly collective expands</p>
             </li>
             <li class="record__item">
                 <img src="assets/web/products/handicrafts/riverbed-indigo-duo.webp" alt="Divulge handcrafted bags representing global export and certified craft" loading="lazy" decoding="async" width="570" height="760">
-                <p class="mono">2025–2026 · Global Export Authority</p><p>DGFT Export Certified &amp; NJB JDP Registered — 63++ artisans delivering to 275,000+ conscious patrons worldwide</p>
+                <p class="mono mono--silt">2025–2026 · Global Export Authority</p><p>DGFT Export Certified &amp; NJB JDP Registered — 63++ artisans delivering to 275,000+ conscious patrons worldwide</p>
             </li>
         </ol>
 
@@ -1229,7 +1274,9 @@
 
         <!-- Collaborative Venture with Amata -->
         <div class="founders__amata-callout">
-            <div class="founders__amata-badge">amata<span>.in</span></div>
+            <div class="founders__amata-badge">
+                <img src="assets/web/brand/amata-logo.webp" alt="amata.in - Organic Jute Leaf Infusions" class="amata-badge-img" width="130" height="42" loading="lazy">
+            </div>
             <div class="founders__amata-text">
                 <p class="founders__amata-title mono">Sister Enterprise &amp; Circular Agriculture</p>
                 <p>Together, the leadership also guides <strong>Amata</strong> (<a href="https://amata.in" target="_blank" rel="noopener noreferrer" class="link-underlined">amata.in</a>) — a wellness venture pioneering certified organic prebiotic Moroheiya jute leaf infusions. While Divulge weaves the plant’s strong golden stems into heirloom crochet bags and home décor, Amata harvests the nutrient-packed leaves for botanical teas — realizing a 100% whole-plant, zero-waste agricultural paradigm.</p>
@@ -1257,7 +1304,7 @@
                 <p class="colophon__craft-note">India’s certified manufacturer &amp; global exporter of handcrafted crochet jute bags, custom OEM totes, and braided home décor.</p>
             </div>
         </div>
-        <p class="colophon__word" id="colophonWord" aria-hidden="true">divulge<span>living</span></p>
+        <p class="colophon__word" id="colophonWord" aria-hidden="true">divulge<span class="brand-reg">®</span><span>living</span></p>
         <!--
         ==========================================================================
         TECHNICAL ARCHITECTURE & WEB ENGINEERING
@@ -1266,24 +1313,35 @@
         ==========================================================================
         -->
         <div class="colophon__legal mono">
-            <p>© <span id="copyrightYear">2026</span> Divulge Living, Howrah, Hooghly &amp; Kolkata, West Bengal, India. All rights reserved.</p>
+            <p>© <span id="copyrightYear">2026</span> Divulge<span class="brand-reg">®</span> Living, Howrah, Hooghly &amp; Kolkata, West Bengal, India. All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- ═══════════ AMBIENT MUSIC PROMPT ═══════════ -->
-    <aside class="music-prompt" id="musicPrompt" role="region" aria-label="Ambient Soundtrack Prompt" hidden>
-        <div class="music-prompt__icon" aria-hidden="true">
-            <span class="music-prompt__bars"><i></i><i></i><i></i><i></i></span>
+    <!-- ═══════════ AMBIENT MUSIC PROMPT MODAL ═══════════ -->
+    <div class="music-modal" id="musicPrompt" role="dialog" aria-modal="true" aria-labelledby="musicModalTitle" hidden>
+        <div class="music-modal__backdrop" id="musicModalBackdrop"></div>
+        <div class="music-modal__card">
+            <div class="music-modal__header">
+                <div class="music-modal__icon" aria-hidden="true">
+                    <span class="music-prompt__bars"><i></i><i></i><i></i><i></i></span>
+                </div>
+                <div>
+                    <span class="music-modal__badge mono">Sensory Audio · Bengal Strings</span>
+                    <h3 id="musicModalTitle" class="music-modal__title">Immerse in Bengal’s Living Sound</h3>
+                </div>
+            </div>
+            <p class="music-modal__desc">Divulge Living is accompanied by an ambient acoustic score composed with traditional Bengal strings and golden strand rhythms. Would you like to enable the soundtrack?</p>
+            <div class="music-modal__actions">
+                <button type="button" class="music-modal__btn music-modal__btn--enable" id="musicEnableBtn">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                    <span>Enable Sound</span>
+                </button>
+                <button type="button" class="music-modal__btn music-modal__btn--dismiss" id="musicDismissBtn">
+                    Continue Muted
+                </button>
+            </div>
         </div>
-        <div class="music-prompt__copy">
-            <p class="music-prompt__kicker mono">Sensory Audio</p>
-            <p class="music-prompt__text">Enable ambient Bengal strings &amp; golden strand acoustics?</p>
-        </div>
-        <div class="music-prompt__actions">
-            <button type="button" class="music-prompt__btn music-prompt__btn--enable" id="musicEnableBtn">Enable Music</button>
-            <button type="button" class="music-prompt__btn music-prompt__btn--dismiss" id="musicDismissBtn" aria-label="Continue muted">Mute</button>
-        </div>
-    </aside>
+    </div>
 
     <!-- ═══════════ FLOATING WIDGETS ═══════════ -->
     <aside class="floating-widgets" aria-label="Quick Actions">

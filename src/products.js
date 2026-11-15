@@ -689,5 +689,5 @@ function initTimedLeadModal() {
             if (sessionStorage.getItem(STORAGE_KEY) === 'true') return;
         } catch {}
         openModal();
-    }, 6000);
+    }, 15000);
 }
