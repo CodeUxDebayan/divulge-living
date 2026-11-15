@@ -8,9 +8,10 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
+import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import Lenis from 'lenis';
 
-gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin);
+gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin, MotionPathPlugin);
 
 const $ = (s, root = document) => root.querySelector(s);
 const $$ = (s, root = document) => [...root.querySelectorAll(s)];
@@ -371,6 +372,36 @@ function nest() {
     const bird = $$('#nestSvg .d-bird .d');
     const frame = strokes.filter((p) => !weave.includes(p) && !bird.includes(p));
     const caption = $('.nest__caption');
+    const birdEl = $("#nestBird");
+    const birdWing = $("#nestBirdWing");
+    const flightPath = $("#birdFlightPath");
+
+    // Continuous graceful flight loop around the nest
+    if (birdEl && flightPath && !reduceMotion) {
+        gsap.to(birdEl, {
+            motionPath: {
+                path: "#birdFlightPath",
+                align: "#birdFlightPath",
+                alignOrigin: [0.5, 0.5],
+                autoRotate: true,
+            },
+            duration: 13,
+            repeat: -1,
+            ease: "none",
+        });
+
+        if (birdWing) {
+            gsap.to(birdWing, {
+                scaleY: 0.5,
+                transformOrigin: "20% 50%",
+                repeat: -1,
+                yoyo: true,
+                duration: 0.15,
+                ease: "power1.inOut",
+            });
+        }
+    }
+
 
     const build = (tl) => {
         tl
