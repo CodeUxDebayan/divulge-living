@@ -4351,3 +4351,60 @@ body { background-color: var(--paper); }
         grid-template-columns: 1fr;
     }
 }
+
+/* ═══════════ PILLAR 1: PRINT STYLESHEET (@media print) ═══════════ */
+@media print {
+    .nav,
+    .floating-widgets,
+    .trade-ticker,
+    .wa-modal,
+    .lead-modal,
+    .lead-hook-banner,
+    .music-modal,
+    .viewfinder,
+    .index-panel,
+    .index-backdrop,
+    .custom-cursor,
+    .film__toggle,
+    .btn-scroll-top,
+    .skip-link,
+    video,
+    audio {
+        display: none !important;
+    }
+
+    body {
+        background: #FFFFFF !important;
+        color: #17110D !important;
+        font-size: 11pt !important;
+        line-height: 1.5 !important;
+    }
+
+    .founders__collab-hub,
+    .export-suite,
+    .dossier-card,
+    .founder-card,
+    .card {
+        background: #FDFBF7 !important;
+        color: #17110D !important;
+        border: 1px solid #D0C8B8 !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    h1, h2, h3, h4 {
+        color: #17110D !important;
+        page-break-after: avoid;
+    }
+
+    a {
+        color: #17110D !important;
+        text-decoration: underline !important;
+    }
+
+    img {
+        max-width: 100% !important;
+        page-break-inside: avoid;
+    }
+}

@@ -20,5 +20,5 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-Sitemap: https://divulge-living.com/sitemap.xml
-# AI Knowledge Summary: https://divulge-living.com/llms.txt
+Sitemap: https://www.divulge-living.com/sitemap.xml
+# AI Knowledge Summary: https://www.divulge-living.com/llms.txt
